@@ -27,16 +27,42 @@ android {
         versionName "${getMyVersionName()}"
     }
 
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
+    signingConfigs {
+        releaseConfig {
+            if (project.hasProperty("releaseStoreFile")) {
+                storeFile file(releaseStoreFile)
+            } else {
+                storeFile file("keystore")
+            }
+            if (project.hasProperty("releaseStorePassword")) {
+                storePassword releaseStorePassword
+            } else {
+                storePassword "password"
+            }
+            if (project.hasProperty("releaseKeyAlias")) {
+                keyAlias releaseKeyAlias
+            } else {
+                keyAlias "alias"
+            }
+            if (project.hasProperty("releaseKeyPassword")) {
+                keyPassword releaseKeyPassword
+            } else {
+                keyPassword "password"
+            }
+        }
     }
 
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.releaseConfig
         }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
     }
 
 /*

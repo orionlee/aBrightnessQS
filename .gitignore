@@ -30,4 +30,6 @@ build.xml
 ## out
 
 # Project-specific ignores
+*.keystore
+gradle*.log
 
