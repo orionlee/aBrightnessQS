@@ -27,27 +27,31 @@ public class BrightnessTileService
     }
 
 
-    
-    private static final int BRIGHTNESS_AUTO = 999;
+    // Encapsulates the access to screen brightness
+    private class BrightnessManager {
+        public static final int BRIGHTNESS_AUTO = 999;
 
-    //@see https://stackoverflow.com/questions/18312609/change-the-system-brightness-programmatically
-    private int getScreenBrightness() {
-        int current;
-        try {
-            int auto = android.provider.Settings.System.getInt(
-                    getApplicationContext().getContentResolver(), android.provider.Settings.System.SCREEN_BRIGHTNESS_MODE);
-            if (auto == 0) {
-                current = android.provider.Settings.System.getInt(
-                    getApplicationContext().getContentResolver(), android.provider.Settings.System.SCREEN_BRIGHTNESS);
-            } else {
-                current = BRIGHTNESS_AUTO;
+        //@see https://stackoverflow.com/questions/18312609/change-the-system-brightness-programmatically
+        public int getScreenBrightness() {
+            int current;
+            try {
+                int auto = android.provider.Settings.System.getInt(
+                        getApplicationContext().getContentResolver(), android.provider.Settings.System.SCREEN_BRIGHTNESS_MODE);
+                if (auto == 0) {
+                    current = android.provider.Settings.System.getInt(
+                        getApplicationContext().getContentResolver(), android.provider.Settings.System.SCREEN_BRIGHTNESS);
+                } else {
+                    current = BRIGHTNESS_AUTO;
+                }
+            } catch (android.provider.Settings.SettingNotFoundException ex) {
+                debug("getScreenBrightness() error: " + ex.getMessage());
+                current = -1;
             }
-        } catch (android.provider.Settings.SettingNotFoundException ex) {
-            debug("getScreenBrightness() error: " + ex.getMessage());
-            current = -1;
+            return current;
         }
-        return current;
+
     }
+    private final BrightnessManager mBrightnessMgr = new BrightnessManager();
 
 
     /**
@@ -67,7 +71,7 @@ public class BrightnessTileService
     public void onStartListening() {
         debug("Start listening");
 
-        updateTile();
+        mTileUpdater.run();
     }
 
     /**
@@ -96,42 +100,51 @@ public class BrightnessTileService
         debug("Tile removed");
     }
 
-    // Used exclusively by updateTile()
-    // a quasi-persistent cache of previous brightness value, 
-    // (that persists across multiple object instance creation/deletion),
-    // but without the performance penalty of relying on actual persistence.
-    private static int msPrevBrightness = -1;
 
-    // Changes the appearance of the tile.
-    private void updateTile() {
-        int brightness = getScreenBrightness();
-        if (brightness == msPrevBrightness) {
-            return;
+    // Encapsulates the logic to change the tile UI.
+    private static class TileUpdater {
+        // Used exclusively by updateTile()
+        // a quasi-persistent cache of previous brightness value, 
+        // (that persists across multiple object instance creation/deletion),
+        // but without the performance penalty of relying on actual persistence.
+        private static int msPrevBrightness = -1;
+
+        private final BrightnessTileService parent;
+        TileUpdater(BrightnessTileService parent) {
+            this.parent = parent;
         }
-        debug("Brightness change detected - prev: " + msPrevBrightness + " , current: " + brightness);
 
-        Tile tile = this.getQsTile();
-        String newLabel;
-        if (brightness != BRIGHTNESS_AUTO) {
-            int brightnessPct = Math.round(100 * brightness / 255);
+        public void run() {
+            int brightness = parent.mBrightnessMgr.getScreenBrightness();
+            if (brightness == msPrevBrightness) {
+                return;
+            }
+            parent.debug("Brightness change detected - prev: " + msPrevBrightness + " , current: " + brightness);
 
-            newLabel = "Brightness: " + brightnessPct + "%";
-            newLabel = String.format(Locale.US,
-                    "%s: %s%%",
-                    getString(R.string.tile_label),
-                    brightnessPct);
-        } else {
-            newLabel = String.format(Locale.US,
-                    "%s: %s",
-                    getString(R.string.tile_label),
-                    getString(R.string.brightness_auto_label));
+            Tile tile = parent.getQsTile();
+            String newLabel;
+            if (brightness != BrightnessManager.BRIGHTNESS_AUTO) {
+                int brightnessPct = Math.round(100 * brightness / 255);
+
+                newLabel = "Brightness: " + brightnessPct + "%";
+                newLabel = String.format(Locale.US,
+                        "%s: %s%%",
+                        parent.getString(R.string.tile_label),
+                        brightnessPct);
+            } else {
+                newLabel = String.format(Locale.US,
+                        "%s: %s",
+                        parent.getString(R.string.tile_label),
+                        parent.getString(R.string.brightness_auto_label));
+            }
+                
+            // update tile UI finally
+            tile.setLabel(newLabel);
+            tile.updateTile();
+
+            msPrevBrightness = brightness;
         }
-            
-        // update tile UI finally
-        tile.setLabel(newLabel);
-        tile.updateTile();
-
-        msPrevBrightness = brightness;
     }
+    private final TileUpdater mTileUpdater = new TileUpdater(this);
 
 }
