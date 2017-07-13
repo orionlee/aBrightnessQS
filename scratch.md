@@ -3,7 +3,7 @@
 ## Useful command lines
   
 ```
-utils/install_n_logcat.sh
+. utils/install_n_logcat.sh
 
 gradleLB.sh :app:installDebug
 adb logcat -s BTS:V
