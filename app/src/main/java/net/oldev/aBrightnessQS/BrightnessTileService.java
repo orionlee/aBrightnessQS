@@ -114,6 +114,25 @@ public class BrightnessTileService
             this.parent = parent;
         }
 
+        // Convert brightness percentage to 
+        // an icon similar to what user preceives with standard brightness slider bar
+        // With standard brightness slider bar, 
+        // - 1-quarter is about 5%
+        // - roughly  half-way is about 25%,
+        // - 3-quarter is about 50%)
+        private int brightnessPctToIconRsrcId(int brightnessPct) {
+            if (brightnessPct > 75) {
+                return R.drawable.tile_brightness_black_100_24dp;
+            } else if (brightnessPct > 40) {
+                return R.drawable.tile_brightness_black_75_24dp;                
+            } else if (brightnessPct > 11) {
+                return R.drawable.tile_brightness_black_50_24dp;                
+            } else if (brightnessPct > 4) {
+                return R.drawable.tile_brightness_black_25_24dp;                
+            } else {
+                return R.drawable.tile_brightness_black_0_24dp;                                
+            }
+        }
         public void run() {
             int brightness = parent.mBrightnessMgr.getScreenBrightness();
             if (brightness == msPrevBrightness) {
@@ -123,6 +142,7 @@ public class BrightnessTileService
 
             Tile tile = parent.getQsTile();
             String newLabel;
+            int newIconRsrcId;
             if (brightness != BrightnessManager.BRIGHTNESS_AUTO) {
                 int brightnessPct = Math.round(100 * brightness / 255);
 
@@ -131,15 +151,19 @@ public class BrightnessTileService
                         "%s: %s%%",
                         parent.getString(R.string.tile_label),
                         brightnessPct);
+                newIconRsrcId = brightnessPctToIconRsrcId(brightnessPct);
             } else {
                 newLabel = String.format(Locale.US,
                         "%s: %s",
                         parent.getString(R.string.tile_label),
                         parent.getString(R.string.brightness_auto_label));
+                newIconRsrcId = R.drawable.tile_brightness_black_auto_24dp;
             }
-                
+             
             // update tile UI finally
             tile.setLabel(newLabel);
+            tile.setIcon(Icon.createWithResource(parent.getApplicationContext(), newIconRsrcId));
+            tile.setState(Tile.STATE_ACTIVE); // typically no need, but do it nonetheless as a defensive measure.
             tile.updateTile();
 
             msPrevBrightness = brightness;
