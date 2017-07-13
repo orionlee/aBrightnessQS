@@ -3,7 +3,9 @@
 -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="net.oldev.aBrightnessQS">
+    package="net.oldev.aBrightnessQS"
+    android:versionCode="000102"
+    android:versionName="0.1.2">
 
     <application
         android:allowBackup="true"

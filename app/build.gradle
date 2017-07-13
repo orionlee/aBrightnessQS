@@ -1,5 +1,20 @@
 apply plugin: 'com.android.application'
 
+// Obtain verion name / string from AndroidManifest
+def getMyVersionName() {
+    def parsedManifestXml = (new XmlSlurper())
+            .parse("${projectDir}/src/main/AndroidManifest.xml")
+            .declareNamespace(android: "http://schemas.android.com/apk/res/android")
+    return parsedManifestXml."@android:versionName"
+}
+
+def getMyVersionCode() {
+    def parsedManifestXml = (new XmlSlurper())
+            .parse("${projectDir}/src/main/AndroidManifest.xml")
+            .declareNamespace(android: "http://schemas.android.com/apk/res/android")
+    return parsedManifestXml."@android:versionCode".toInteger()
+}
+
 android {
     compileSdkVersion 24
     buildToolsVersion "24.0.1"
@@ -8,8 +23,8 @@ android {
         applicationId "net.oldev.abrightnessQS"
         minSdkVersion 24
         targetSdkVersion 24
-        versionCode 1
-        versionName "1.0" // see AntennaPod for examples in how to get it from AndroidManifest.xml
+        versionCode getMyVersionCode()
+        versionName "${getMyVersionName()}"
     }
 
     compileOptions {
