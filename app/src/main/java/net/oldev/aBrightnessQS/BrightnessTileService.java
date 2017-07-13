@@ -29,7 +29,7 @@ public class BrightnessTileService
             if (brightness == BRIGHTNESS_AUTO) {
                 return BRIGHTNESS_AUTO;
             } else {
-                return Math.round(100 * brightness / 255);
+                return Math.round(100.0f * brightness / 255);
             }
         }
         
@@ -44,7 +44,7 @@ public class BrightnessTileService
             if (pct == BRIGHTNESS_AUTO) {
                 setAuto();
             } else {
-                int brightness = Math.round(255 * pct / 100);
+                int brightness = Math.round(255.0f * pct / 100);
                 // ensure minimum level of brightness (aka 0%)
                 // does not translate to brightness == 0
                 // as it might not work for some devices, or might completely black out the screen.
@@ -114,6 +114,21 @@ public class BrightnessTileService
         mTileUpdater.run();
     }
 
+
+    private int getNextLevelInPct(int curPct) {
+        // TODO: make it user-configurable
+        // MUST be sorted
+        final int[] steps = {1, 5, 10, 25, 35, 55, 100}; // , BrightnessManager.BRIGHTNESS_AUTO
+
+        for(int i = 0; i < steps.length; i++) {
+            if (curPct < steps[i]) {
+                return steps[i];
+            }
+        }
+        // case curPct >= max(steps), rotate back to the front
+        return steps[0];
+    }
+
     /**
      * Called when the user taps the tile.
      */
@@ -121,9 +136,10 @@ public class BrightnessTileService
     public void onClick() {
         debug("Tile tapped");
 
-        if (mBrightnessMgr.canSetPct()) {
-            int pctToSet = 33; // TODO: calc the toggle
+        if (mBrightnessMgr.canSetPct()) {            
+            int pctToSet = getNextLevelInPct(mBrightnessMgr.getPct()); 
             mBrightnessMgr.setPct(pctToSet); 
+            mTileUpdater.run(); 
         } else {
             // TODO: launch a request screen 
             // 1. Use tile.startActivityAndCollapse(Intent) to launch request screen
