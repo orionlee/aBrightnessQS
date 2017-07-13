@@ -7,7 +7,6 @@ import android.os.Build;
 import android.service.quicksettings.Tile;
 import android.service.quicksettings.TileService;
 import android.util.Log;
-///import android.widget.Toast;
 
 import java.util.Locale;
 
@@ -17,13 +16,7 @@ public class BrightnessTileService
    extends TileService {
 
     private void debug(String msg) {
-        String msgFinal = msg + "[ServiceState{locked: " + isLocked() + ", secure: " + isSecure() + " }]";
-
-        Log.d("BTS", msgFinal);
-        /// Toast not useful, as they won't be shown until after quick settings tile have been pulled
-        /// Use logcat instead
-        ///   adb logcat -s QST:V
-        ///Toast.makeText(getApplicationContext(), msgFinal, Toast.LENGTH_LONG).show();      
+        Log.d("BTS", msg);
     }
 
 
