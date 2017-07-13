@@ -3,11 +3,15 @@
 ## Useful command lines
   
 ```
+utils/install_n_logcat.sh
+
+gradleLB.sh :app:installDebug
+adb logcat -s BTS:V
+
 gradleLB.sh :app:compileDebugSources
 gradleLB.sh :app:assembleDebug
-
 adb install -r app/build/outputs/apk/app-debug.apk
-adb logcat -s QST:V
+
 
 gradleLB.sh :app:compileCompletedDebugJavaWithJavacC
 
