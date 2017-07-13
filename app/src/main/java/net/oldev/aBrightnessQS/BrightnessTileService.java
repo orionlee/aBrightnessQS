@@ -24,8 +24,55 @@ public class BrightnessTileService
     private class BrightnessManager {
         public static final int BRIGHTNESS_AUTO = 999;
 
-        //@see https://stackoverflow.com/questions/18312609/change-the-system-brightness-programmatically
-        public int getScreenBrightness() {
+        public int getPct() {
+            int brightness = getRaw();
+            if (brightness == BRIGHTNESS_AUTO) {
+                return BRIGHTNESS_AUTO;
+            } else {
+                return Math.round(100 * brightness / 255);
+            }
+        }
+        
+        public boolean canSetPct() {
+            return android.provider.Settings.System.canWrite(getApplicationContext());
+        }
+
+        /**
+         * @param pct brightness percentage, {@link #BRIGHTNESS_AUTO} for auto 
+         */
+        public void setPct(int pct) {
+            if (pct == BRIGHTNESS_AUTO) {
+                setAuto();
+            } else {
+                int brightness = Math.round(255 * pct / 100);
+                // ensure minimum level of brightness (aka 0%)
+                // does not translate to brightness == 0
+                // as it might not work for some devices, or might completely black out the screen.
+                if (brightness < 3) {
+                    brightness = 2;
+                }
+                setManual(brightness);
+            }
+        }
+
+        private void setManual(int brightnessVal) {
+            // TODO: assert 0 <= brightnessVal <= 255
+            android.provider.Settings.System.putInt(getApplicationContext().getContentResolver(),
+                    android.provider.Settings.System.SCREEN_BRIGHTNESS, brightnessVal);
+            android.provider.Settings.System.putInt(getApplicationContext().getContentResolver(),
+                    android.provider.Settings.System.SCREEN_BRIGHTNESS_MODE, android.provider.Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);            
+        }
+
+        private void setAuto() {
+            android.provider.Settings.System.putInt(getApplicationContext().getContentResolver(),
+                    android.provider.Settings.System.SCREEN_BRIGHTNESS_MODE, android.provider.Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC);            
+        }
+
+        /**
+         * @return raw brightness value (0 - 255)
+         * @see https://stackoverflow.com/questions/18312609/change-the-system-brightness-programmatically
+         */
+        private int getRaw() {
             int current;
             try {
                 int auto = android.provider.Settings.System.getInt(
@@ -37,7 +84,7 @@ public class BrightnessTileService
                     current = BRIGHTNESS_AUTO;
                 }
             } catch (android.provider.Settings.SettingNotFoundException ex) {
-                debug("getScreenBrightness() error: " + ex.getMessage());
+                debug("BrightnessManager.get() error: " + ex.getMessage());
                 current = -1;
             }
             return current;
@@ -74,7 +121,21 @@ public class BrightnessTileService
     public void onClick() {
         debug("Tile tapped");
 
-        // TODO: implement code to change brigtness
+        if (mBrightnessMgr.canSetPct()) {
+            int pctToSet = 33; // TODO: calc the toggle
+            mBrightnessMgr.setPct(pctToSet); 
+        } else {
+            // TODO: launch a request screen 
+            // 1. Use tile.startActivityAndCollapse(Intent) to launch request screen
+            //    @see https://developer.android.com/reference/android/service/quicksettings/TileService.html#startActivityAndCollapse(android.content.Intent)
+            // 2. implmenet the request screen
+            //    @see https://developer.android.com/training/permissions/requesting.html
+            // 
+            // A quick and dirty is to launch com.android.settings.Settings$WriteSettingsActivity for the screen
+            String permissionNeededMsg = "Modify system settings permission required. Please goto Settings > App permissions > Special access > Modify system settings to grant the access";
+            android.widget.Toast.makeText(getApplicationContext(), permissionNeededMsg, 
+                    android.widget.Toast.LENGTH_LONG).show();      
+        }      
     }
 
     /**
@@ -100,7 +161,7 @@ public class BrightnessTileService
         // a quasi-persistent cache of previous brightness value, 
         // (that persists across multiple object instance creation/deletion),
         // but without the performance penalty of relying on actual persistence.
-        private static int msPrevBrightness = -1;
+        private static int msPrevBrightnessPct = -1;
 
         private final BrightnessTileService parent;
         TileUpdater(BrightnessTileService parent) {
@@ -127,17 +188,16 @@ public class BrightnessTileService
             }
         }
         public void run() {
-            int brightness = parent.mBrightnessMgr.getScreenBrightness();
-            if (brightness == msPrevBrightness) {
+            int brightnessPct = parent.mBrightnessMgr.getPct();
+            if (brightnessPct == msPrevBrightnessPct) {
                 return;
             }
-            parent.debug("Brightness change detected - prev: " + msPrevBrightness + " , current: " + brightness);
+            parent.debug("Brightness% change detected - prev: " + msPrevBrightnessPct + " , current: " + brightnessPct);
 
             Tile tile = parent.getQsTile();
             String newLabel;
             int newIconRsrcId;
-            if (brightness != BrightnessManager.BRIGHTNESS_AUTO) {
-                int brightnessPct = Math.round(100 * brightness / 255);
+            if (brightnessPct != BrightnessManager.BRIGHTNESS_AUTO) {
 
                 newLabel = "Brightness: " + brightnessPct + "%";
                 newLabel = String.format(Locale.US,
@@ -159,7 +219,8 @@ public class BrightnessTileService
             tile.setState(Tile.STATE_ACTIVE); // typically no need, but do it nonetheless as a defensive measure.
             tile.updateTile();
 
-            msPrevBrightness = brightness;
+            // remember current level for subequent uses
+            msPrevBrightnessPct = brightnessPct;
         }
     }
     private final TileUpdater mTileUpdater = new TileUpdater(this);
