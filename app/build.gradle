@@ -58,8 +58,10 @@ android {
             // versionNameSuffix helps to differentiate them visually
             applicationIdSuffix ".debug" 
             versionNameSuffix "-debug"
+            resValue "string", "app_name", "@string/app_name_debug"
         }
         release {
+            resValue "string", "app_name", "@string/app_name_release"
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.releaseConfig
