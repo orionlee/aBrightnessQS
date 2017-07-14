@@ -8,6 +8,10 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.EditText;
 
+import android.text.InputType;
+import android.view.inputmethod.EditorInfo;
+import android.view.KeyEvent;
+
 public class MainActivity extends AppCompatActivity {
 
     private static class BrightnessSettingsModel {
@@ -54,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
         android.widget.Toast.makeText(getApplicationContext(), msg, 
             android.widget.Toast.LENGTH_LONG).show();      
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,16 +97,23 @@ public class MainActivity extends AppCompatActivity {
         return tView.getText();
     }
     private void showBrightnessPctsDialog(CharSequence curValue) {
+        //@see https://stackoverflow.com/questions/10903754/input-text-dialog-android
+
         android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
 
         builder.setTitle(getTextOfViewById(R.id.brightnessPctsLabel));
         builder.setMessage(getTextOfViewById(R.id.brightnessPctsLabelDesc));
 
         final EditText editText = new EditText(this);
-        editText.setText(curValue);
+        editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+        //@see https://developer.android.com/training/keyboard-input/style.html#Action
+        //@see https://stackoverflow.com/a/5941620
+        editText.setImeOptions(EditorInfo.IME_ACTION_DONE);
 
         builder.setView(editText);
 
+        editText.setText(curValue);
+        
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 String newVal = editText.getText().toString();
@@ -116,8 +128,26 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        builder.show();
+        final android.app.Dialog dialog = builder.show();
 
+        // set it here as it requires a reference to dialog
+        editText.setOnEditorActionListener(new android.widget.TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                boolean handled = false;
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    // TODO: Refactor with setPositiveButton
+                    String newVal = editText.getText().toString();
+                    mModel.setSettings(newVal);
+                    dbgMsg("After OK: " + newVal);
+                    dialog.dismiss();
+                    handled = true;
+                }
+                return handled;
+            }
+        });
+
+        /// TODO: return dialog;
     }
 }
 
