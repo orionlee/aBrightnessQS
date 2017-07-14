@@ -9,7 +9,7 @@
   - UI to configure the steps
     - [x] UI prototype 
     - Implement persistence
-- Debug build use a different name. See https://stackoverflow.com/a/41301021
+- [x] Debug build use a different name. See https://stackoverflow.com/a/41301021
 - [x] Get a relase build (requires a certificate)
 - UI to request WRITE_SETTINGS permission
 - drawing percentage over the tile icon?
