@@ -29,6 +29,14 @@ build.xml
 ## gen-external-apklibs
 ## out
 
+# vscode java language support
+.classpath
+.project
+.settings/
+
+# Other vscode plugin
+.vscode/
+
 # Project-specific ignores
 *.keystore
 gradle*.log
