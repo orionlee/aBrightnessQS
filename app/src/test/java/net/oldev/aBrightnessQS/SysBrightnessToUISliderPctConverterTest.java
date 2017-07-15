@@ -1,17 +1,41 @@
 package net.oldev.aBrightnessQS;
 
+import java.util.Arrays;
+import java.util.Collection;
+
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameter;
+import org.junit.runners.Parameterized.Parameters;
 
 import static org.junit.Assert.*;
 import static net.oldev.aBrightnessQS.SysBrightnessToUISliderPctConverter.*;
 
 public class SysBrightnessToUISliderPctConverterTest {
 
+    @RunWith(Parameterized.class)
     public static class PositiveTest {
 
-        // Test driver for positive tests,
-        // starting with uiPct (0 - 100)
-        private void tWithUiPct(int uiPctInTest, int sysBrightnessExpected) throws Exception {
+        @Parameters(name = "{index}: uiPctToSysBrightness({0})={1}")
+        public static Iterable<Object[]> data() {
+            return Arrays.asList(new Object[][] { 
+                    { 0, 0 }, { 20, 128 }, { 25, 141 }, 
+                    { 50, 190 }, { 75, 225 }, { 100, 255 }
+            });
+        }
+
+        @Parameter
+        public int uiPctInTest;
+
+        @Parameter(1)
+        public int sysBrightnessExpected;
+
+        // Test driver for positive tests.
+        // Given a uiPct (0 - 100), convert to sysBrightness;
+        // then convert it back.
+        @Test
+        public void tWithUiPct() throws Exception {
             final int sysBrightnessActual = uiPctToSysBrightness(uiPctInTest);
             assertEquals("uiPct to sysBrightness conversion:",  sysBrightnessExpected, sysBrightnessActual);
 
@@ -24,34 +48,6 @@ public class SysBrightnessToUISliderPctConverterTest {
 
         }
 
-        @Test
-        public void uiAt0() throws Exception {
-            tWithUiPct(0, 0);
-        }
-
-        @Test
-        public void uiAt20() throws Exception {
-            tWithUiPct(20, 128);
-        }
-
-        @Test
-        public void uiAt25() throws Exception {
-            tWithUiPct(25, 141);
-        }
-        @Test
-        public void uiAt50() throws Exception {
-            tWithUiPct(50, 190);
-        }
-
-        @Test
-        public void uiAt75() throws Exception {
-            tWithUiPct(75, 225);
-        }
-
-        @Test
-        public void uiAt100() throws Exception {
-            tWithUiPct(100, 255);
-        }
     }
   
     public static class NegativeTest {
