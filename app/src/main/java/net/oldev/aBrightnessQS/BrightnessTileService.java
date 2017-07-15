@@ -15,10 +15,18 @@ import java.util.Locale;
 public class BrightnessTileService
    extends TileService {
 
+    private void warn(String msg, Throwable t) {
+        Log.w("BTS", msg, t);
+    }
+
     private void debug(String msg) {
         Log.d("BTS", msg);
     }
 
+    // Intended to be used sparringly
+    private void verbose(String msg) {
+        Log.v("BTS", msg);
+    }
 
     // Encapsulates the access to screen brightness
     private class BrightnessManager {
@@ -26,11 +34,16 @@ public class BrightnessTileService
 
         public int getPct() {
             int brightness = getRaw();
+            int pct;
             if (brightness == BRIGHTNESS_AUTO) {
-                return BRIGHTNESS_AUTO;
+                pct = BRIGHTNESS_AUTO;
             } else {
-                return Math.round(100.0f * brightness / 255);
+                pct = SysBrightnessToUISliderPctConverter.sysBrightnessToUiPct(brightness);
             }
+            // for debugging brightness - UI slider percentage
+            verbose("BrightnessManager.getPct():  brightness=" + brightness + " ; pct=" + pct);
+
+            return pct;
         }
         
         public boolean canSetPct() {
@@ -44,12 +57,12 @@ public class BrightnessTileService
             if (pct == BRIGHTNESS_AUTO) {
                 setAuto();
             } else {
-                int brightness = Math.round(255.0f * pct / 100);
+                int brightness = SysBrightnessToUISliderPctConverter.uiPctToSysBrightness(pct);
                 // ensure minimum level of brightness (aka 0%)
                 // does not translate to brightness == 0
                 // as it might not work for some devices, or might completely black out the screen.
-                if (brightness < 3) {
-                    brightness = 2;
+                if (brightness < 2) {
+                    brightness = 1;
                 }
                 setManual(brightness);
             }
@@ -84,8 +97,8 @@ public class BrightnessTileService
                     current = BRIGHTNESS_AUTO;
                 }
             } catch (android.provider.Settings.SettingNotFoundException ex) {
-                debug("BrightnessManager.get() error: " + ex.getMessage());
-                current = -1;
+                warn("BrightnessManager.get() error. Returning Maximum to be safe",  ex);
+                current = 255;
             }
             return current;
         }
@@ -118,10 +131,15 @@ public class BrightnessTileService
     private int getNextLevelInPct(int curPct) {
         // TODO: make it user-configurable
         // MUST be sorted
-        final int[] steps = {1, 5, 10, 25, 35, 55, 100}; // , BrightnessManager.BRIGHTNESS_AUTO
+        final int[] steps = {10, 25, 50, 75, 100}; // , BrightnessManager.BRIGHTNESS_AUTO
 
         for(int i = 0; i < steps.length; i++) {
-            if (curPct < steps[i]) {
+            // add a - 1 to account for the rounding error somtimes introduced.
+            // E.g., setting at UI slider 10%, the raw brightness that got 
+            // translated back could be 9%, 
+            // If we do not minue one in calculate the next step,
+            // it will get perpectually stuck at 10% level.
+            if (curPct < steps[i] - 1) {
                 return steps[i];
             }
         }
@@ -191,13 +209,13 @@ public class BrightnessTileService
         // - roughly  half-way is about 25%,
         // - 3-quarter is about 50%)
         private int brightnessPctToIconRsrcId(int brightnessPct) {
-            if (brightnessPct > 75) {
+            if (brightnessPct > 85) {
                 return R.drawable.tile_brightness_black_100_24dp;
-            } else if (brightnessPct > 40) {
+            } else if (brightnessPct > 65) {
                 return R.drawable.tile_brightness_black_75_24dp;                
-            } else if (brightnessPct > 11) {
+            } else if (brightnessPct > 40) {
                 return R.drawable.tile_brightness_black_50_24dp;                
-            } else if (brightnessPct > 4) {
+            } else if (brightnessPct > 24) {
                 return R.drawable.tile_brightness_black_25_24dp;                
             } else {
                 return R.drawable.tile_brightness_black_0_24dp;                                
