@@ -53,37 +53,31 @@ public class SysBrightnessToUISliderPctConverterTest {
     public static class NegativeTest {
 
         private void negt4UI(int uiPct) throws Exception {
-            try {
-                int sysBrightnessActual = uiPctToSysBrightness(uiPct);
-                fail("Test for illegal uiPct failed. uiPct for test:<" + uiPct + ">.  expected:<IllegalArgumentException> but was:<" +  sysBrightnessActual +">");
-            } catch (IllegalArgumentException iae) {
-            }
+            int sysBrightnessActual = uiPctToSysBrightness(uiPct);
+            /// fail("Test for illegal uiPct failed. uiPct for test:<" + uiPct + ">.  expected:<IllegalArgumentException> but was:<" +  sysBrightnessActual +">");
         }
 
         private void negt4SysBrightness(int sysBrightness) throws Exception {
-            try {
-                int uiPctActual = sysBrightnessToUiPct(sysBrightness);
-                fail("Test for illegal sysBrightness failed. sysBrightness for test:<" + sysBrightness + ">.  expected:<IllegalArgumentException> but was:<" +  sysBrightness +">");
-            } catch (IllegalArgumentException iae) {
-            }
+            int uiPctActual = sysBrightnessToUiPct(sysBrightness);
+            ///fail("Test for illegal sysBrightness failed. sysBrightness for test:<" + sysBrightness + ">.  expected:<IllegalArgumentException> but was:<" +  sysBrightness +">");
         }
 
-        @Test
+        @Test(expected = IllegalArgumentException.class)
         public void negUIAtNeg() throws Exception {
             negt4UI(-1);
         }
 
-        @Test
+        @Test(expected = IllegalArgumentException.class)
         public void negUIAt101() throws Exception {
             negt4UI(101);
         }
 
-        @Test
+        @Test(expected = IllegalArgumentException.class)
         public void negSysBrightnessAtNeg() throws Exception {
             negt4SysBrightness(-1);
         }
 
-        @Test
+        @Test(expected = IllegalArgumentException.class)
         public void negSysBrightnessAt256() throws Exception {
             negt4SysBrightness(256);
         }
