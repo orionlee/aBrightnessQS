@@ -131,7 +131,7 @@ public class BrightnessTileService
     private int getNextLevelInPct(int curPct) {
         // TODO: make it user-configurable
         // MUST be sorted
-        final int[] steps = {10, 25, 50, 75, 100}; // , BrightnessManager.BRIGHTNESS_AUTO
+        final int[] steps = {10, 30, 50, 75, 100}; // , BrightnessManager.BRIGHTNESS_AUTO
 
         for(int i = 0; i < steps.length; i++) {
             // add a - 1 to account for the rounding error somtimes introduced.
@@ -229,26 +229,14 @@ public class BrightnessTileService
             parent.debug("Brightness% change detected - prev: " + msPrevBrightnessPct + " , current: " + brightnessPct);
 
             Tile tile = parent.getQsTile();
-            String newLabel;
             int newIconRsrcId;
             if (brightnessPct != BrightnessManager.BRIGHTNESS_AUTO) {
-
-                newLabel = "Brightness: " + brightnessPct + "%";
-                newLabel = String.format(Locale.US,
-                        "%s: %s%%",
-                        parent.getString(R.string.tile_label),
-                        brightnessPct);
                 newIconRsrcId = brightnessPctToIconRsrcId(brightnessPct);
             } else {
-                newLabel = String.format(Locale.US,
-                        "%s: %s",
-                        parent.getString(R.string.tile_label),
-                        parent.getString(R.string.brightness_auto_label));
                 newIconRsrcId = R.drawable.tile_brightness_black_auto_24dp;
             }
              
             // update tile UI finally
-            tile.setLabel(newLabel);
             tile.setIcon(Icon.createWithResource(parent.getApplicationContext(), newIconRsrcId));
             tile.setState(Tile.STATE_ACTIVE); // typically no need, but do it nonetheless as a defensive measure.
             tile.updateTile();
