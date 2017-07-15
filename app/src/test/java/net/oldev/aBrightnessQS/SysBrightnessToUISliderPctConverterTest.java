@@ -22,8 +22,8 @@ public class SysBrightnessToUISliderPctConverterTest {
         @Parameters(name = "{index}: uiPctToSysBrightness({0})={1}")
         public static Iterable<Object[]> data() {
             return Arrays.asList(new Object[][] { 
-                    { 0, 0 }, { 20, 128 }, { 25, 141 }, 
-                    { 50, 190 }, { 75, 225 }, { 100, 255 }
+                    { 0, 0 }, { 10, 1 }, { 20, 6 }, { 25, 10 }, 
+                    { 50, 50 }, { 75, 130 }, { 100, 255 }
             });
         }
 
@@ -39,14 +39,16 @@ public class SysBrightnessToUISliderPctConverterTest {
         @Test
         public void tWithUiPct() throws Exception {
             final int sysBrightnessActual = uiPctToSysBrightness(uiPctInTest);
-            assertEquals("uiPct to sysBrightness conversion:",  sysBrightnessExpected, sysBrightnessActual);
+            assertEquals("1) uiPct to sysBrightness conversion:",  sysBrightnessExpected, sysBrightnessActual);
 
             // Do reverse conversion test
             //  The exepected result should be the uiPct supplied by the caller
             final int uiPctExpected = uiPctInTest; 
             final int uiPctConverted = sysBrightnessToUiPct(sysBrightnessActual);
 
-            assertEquals("sysBrightness to uiPct conversion:", uiPctExpected, uiPctConverted);
+            // since the conversion involves rounding to integer
+            // reverse the conversion could induce slight rounding error
+            assertEquals("2) sysBrightness to uiPct conversion:", (float)uiPctExpected, (float)uiPctConverted, 1f);
 
         }
 

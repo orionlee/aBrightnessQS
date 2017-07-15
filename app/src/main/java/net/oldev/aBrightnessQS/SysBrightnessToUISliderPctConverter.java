@@ -32,26 +32,31 @@ public class SysBrightnessToUISliderPctConverter {
     //   https://www.osapublishing.org/josa/abstract.cfm?uri=josa-33-5-270
 
 
-    private static final double V_TO_BRIGHTNESS_RATIO = 255d / 10d;
+    private static final double Y_TO_BRIGHTNESS_RATIO = 255d / 100d;
 
     public static int uiPctToSysBrightness(int uiPct) {
         validateUiPct(uiPct, "uiPctToSysBrightness()");
 
-        // Folow the formula to calculate V 
-        final double relLuminanceInV = pow(uiPct, 0.4269) * 1.4;
+        // convert from percentage (0-100) to V (in a 0-10) scale
+        final double ligthnessV = uiPct / 10d;
 
-        final int sysBrightness = (int)round(relLuminanceInV * V_TO_BRIGHTNESS_RATIO);
+        // The inverse of the formula to calculate V
+        final double relLuminanceYInPct = pow(10, log10(ligthnessV / 1.4) / 0.4269);
 
+        final int sysBrightness = (int)round(relLuminanceYInPct * Y_TO_BRIGHTNESS_RATIO);
+ 
         return sysBrightness;
     }
     public static int sysBrightnessToUiPct(int sysBrightness) {
         validateSysBrightness(sysBrightness, "sysBrightnessToUiPct()");
 
-        final double relLuminanceInV = sysBrightness / V_TO_BRIGHTNESS_RATIO;
+        final double relLuminanceYInPct = sysBrightness / Y_TO_BRIGHTNESS_RATIO;
 
-        // The inverse of the formula to calculate Y, 
-        // which is equivalent to percentage of brightness slider UI
-        final int uiPct = (int)round(pow(10, log10(relLuminanceInV / 1.4) / 0.4269));
+        // Follow the formula 
+        final double lightnessV = pow(relLuminanceYInPct, 0.4269) * 1.4;
+
+        // convert V to 0-100 percentage
+        final int uiPct = (int)round(lightnessV * 10d);
 
         return uiPct;
     }
