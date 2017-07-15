@@ -77,11 +77,12 @@ android {
         additionalParameters "--no-version-vectors"
     }
 
-/*
     sourceSets {
-        java.srcDirs = ['src/main/java']
+        main {
+            java.srcDirs = ['src/main/java']
+        }
     }
-    */
+
 }
 
 dependencies {
