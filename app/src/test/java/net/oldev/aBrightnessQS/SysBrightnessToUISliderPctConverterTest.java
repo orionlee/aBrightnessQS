@@ -3,7 +3,9 @@ package net.oldev.aBrightnessQS;
 import java.util.Arrays;
 import java.util.Collection;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
@@ -49,38 +51,47 @@ public class SysBrightnessToUISliderPctConverterTest {
         }
 
     }
-  
-    public static class NegativeTest {
 
-        private void negt4UI(int uiPct) throws Exception {
+    @RunWith(Parameterized.class)
+    public static class Negative4UiPctTest {
+
+        @Parameters(name = "{index}: uiPct={0}")
+        public static Object[] data() {
+            return new Object[] { -1, 101 };
+        }
+        
+        @Parameter
+        public int uiPct;
+
+        @Rule
+        public ExpectedException thrown = ExpectedException.none();
+
+        @Test
+        public void test() throws Exception {
+            thrown.expect(IllegalArgumentException.class);
             int sysBrightnessActual = uiPctToSysBrightness(uiPct);
-            /// fail("Test for illegal uiPct failed. uiPct for test:<" + uiPct + ">.  expected:<IllegalArgumentException> but was:<" +  sysBrightnessActual +">");
-        }
-
-        private void negt4SysBrightness(int sysBrightness) throws Exception {
-            int uiPctActual = sysBrightnessToUiPct(sysBrightness);
-            ///fail("Test for illegal sysBrightness failed. sysBrightness for test:<" + sysBrightness + ">.  expected:<IllegalArgumentException> but was:<" +  sysBrightness +">");
-        }
-
-        @Test(expected = IllegalArgumentException.class)
-        public void negUIAtNeg() throws Exception {
-            negt4UI(-1);
-        }
-
-        @Test(expected = IllegalArgumentException.class)
-        public void negUIAt101() throws Exception {
-            negt4UI(101);
-        }
-
-        @Test(expected = IllegalArgumentException.class)
-        public void negSysBrightnessAtNeg() throws Exception {
-            negt4SysBrightness(-1);
-        }
-
-        @Test(expected = IllegalArgumentException.class)
-        public void negSysBrightnessAt256() throws Exception {
-            negt4SysBrightness(256);
         }
     }
 
+    @RunWith(Parameterized.class)
+    public static class Negative4SysBrightnessTest {
+
+        @Parameters(name = "{index}: sysBrightness={0}")
+        public static Object[] data() {
+            return new Object[] { -1, 256 };
+        }
+
+        @Parameter
+        public int sysBrightness;
+
+        @Rule
+        public ExpectedException thrown = ExpectedException.none();
+        
+        @Test
+        public void test() throws Exception {
+            thrown.expect(IllegalArgumentException.class);
+            int uiPctActual = sysBrightnessToUiPct(sysBrightness);
+        }
+    }    
+    
 }
