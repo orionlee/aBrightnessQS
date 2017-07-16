@@ -20,7 +20,7 @@ android {
     buildToolsVersion "24.0.1"
 
     defaultConfig {
-        applicationId "net.oldev.abrightnessQS"
+        applicationId "net.oldev.aBrightnessQS"
         minSdkVersion 24
         targetSdkVersion 24
         versionCode getMyVersionCode()
