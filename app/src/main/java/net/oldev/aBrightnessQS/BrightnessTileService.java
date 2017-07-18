@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.graphics.drawable.Icon;
 import android.os.Build;
-import android.os.AsyncTask;
 import android.service.quicksettings.Tile;
 import android.service.quicksettings.TileService;
 import android.util.Log;
@@ -127,7 +126,7 @@ public class BrightnessTileService
     public void onStartListening() {
         debug("Start listening");
 
-        asyncUpdateUI(); /// mTileUpdater.run();
+        mTileUpdater.run();
     }
 
 
@@ -160,7 +159,7 @@ public class BrightnessTileService
         if (mBrightnessMgr.canSetPct()) {            
             int pctToSet = getNextLevelInPct(mBrightnessMgr.getPct()); 
             mBrightnessMgr.setPct(pctToSet); 
-            asyncUpdateUI(); // mTileUpdater.run(); 
+            mTileUpdater.run(); 
         } else {
             // TODO: launch a request screen 
             // 1. Use tile.startActivityAndCollapse(Intent) to launch request screen
@@ -191,23 +190,6 @@ public class BrightnessTileService
         debug("Tile removed");
     }
 
-
-    private class AsyncTileUpdater extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            return null;
-        }        
-
-        @Override
-        protected void onPostExecute(Void result) {
-            mTileUpdater.run();
-        }
-    }
-    private void asyncUpdateUI() {
-        AsyncTileUpdater asyncTileUpdater = new AsyncTileUpdater();
-        asyncTileUpdater.execute();
-    }
 
     // Encapsulates the logic to change the tile UI.
     private static class TileUpdater {
@@ -251,7 +233,7 @@ public class BrightnessTileService
 
             // TODO: consider to supply an user option of not updating tile
             // if the intermittent stalling (with multiple clicks) cannot be fixed
-            
+
             Tile tile = parent.getQsTile();
 
             int newIconRsrcId;
