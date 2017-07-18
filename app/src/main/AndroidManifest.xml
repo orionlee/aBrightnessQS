@@ -4,8 +4,8 @@
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="net.oldev.aBrightnessQS"
-    android:versionCode="000109"
-    android:versionName="0.1.9">
+    android:versionCode="000116"
+    android:versionName="0.1.16">
 
     <!-- for writing display brightness settings -->
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
