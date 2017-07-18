@@ -13,6 +13,7 @@ gradleLB.sh :app:compileDebugSources
 gradleLB.sh :app:assembleDebug
 adb install -r app/build/outputs/apk/app-debug.apk
 
+gradlew --stop
 
 gradleLB.sh :app:compileCompletedDebugJavaWithJavacC
 
