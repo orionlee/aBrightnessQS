@@ -22,13 +22,17 @@
   - v0.1.15 : an empty tile (still calling `tile.updateTile()`)
   - Conclusion: 
     - *any* tileupdate, even an empty one, could stall UI intermittently
+    - using AsyncTask brings no noticable change
+    - Reasons
       - by stalling, it means that after clicking the tile, occasionally
         it does not accept further clicks for a few seconds, making cycling
         through brightness a tad unpleasant.
       - the reason seems to be when tere is a tile update, Android would occasionally
         stop listening to tile (calling `#onStopListening()`). A few seconds later,
-        it would start listening again (calling `#onStartListening()`)
-    - using AsyncTask brings no noticable change
+        it would start listening again (calling `#onStartListening()`). 
+      - In the interval between stop and start, clicking on tile would be fruitless
+      - For now, either live will the intermittent stalling, or do not update UI at all
+        - One possible enhancement is to use `META_DATA_ACTIVE_TILE` 
 - [x] Debug build use a different name. See https://stackoverflow.com/a/41301021
 - [x] Get a relase build (requires a certificate)
 - UI to request WRITE_SETTINGS permission
