@@ -3,15 +3,18 @@
 -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="net.oldev.aBrightnessQS"
-    android:versionCode="000117"
-    android:versionName="0.1.17">
+    android:versionCode="000118"
+    android:versionName="0.1.18"
+    tools:ignore="GradleOverrides">
 
     <!-- for writing display brightness settings -->
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
 
     <application
         android:allowBackup="true"
+        android:fullBackupContent="true"
         android:icon="@mipmap/ic_launcher_brightness6_green"
         android:label="@string/app_name"
         android:supportsRtl="true"
