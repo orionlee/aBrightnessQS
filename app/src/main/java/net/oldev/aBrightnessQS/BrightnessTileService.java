@@ -30,7 +30,7 @@ public class BrightnessTileService
 
     // Encapsulates the access to screen brightness
     private class BrightnessManager {
-        public static final int BRIGHTNESS_AUTO = 999;
+        public static final int BRIGHTNESS_AUTO = BrightnessSettingsModel.BRIGHTNESS_AUTO;
 
         public int getPct() {
             int brightness = getRaw();
@@ -130,10 +130,12 @@ public class BrightnessTileService
     }
 
 
+    private BrightnessSettingsModel mSettingsModel;
     private int getNextLevelInPct(int curPct) {
-        // TODO: make it user-configurable
-        // MUST be sorted
-        final int[] steps = {10, 30, 50, 75, 100}; // , BrightnessManager.BRIGHTNESS_AUTO
+        if (mSettingsModel == null) {
+            mSettingsModel = new BrightnessSettingsModel(getApplicationContext());
+        }
+        final int[] steps = mSettingsModel.getSettingsAsArray();
 
         for(int i = 0; i < steps.length; i++) {
             // add a - 1 to account for the rounding error somtimes introduced.

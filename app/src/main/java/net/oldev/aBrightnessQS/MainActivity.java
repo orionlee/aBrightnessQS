@@ -14,44 +14,6 @@ import android.view.KeyEvent;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static class BrightnessSettingsModel {
-
-        private final Context mContext;
-
-        private ChangeListener mListener = null;
-
-        public BrightnessSettingsModel(Context context) {
-            mContext = context;
-        }
-
-        // TODO: real persistence
-        private static String msSettings = "1,5,10,35,50,100";
-    
-        public String getSettings() {
-            return msSettings;
-        }
-
-        public void setSettings(String settings) {
-            // TODO: validation
-            msSettings = settings;
-            fireChangeEvent();
-        }
-
-        private void fireChangeEvent() {
-            if (mListener != null) {
-                mListener.onChange(msSettings);
-            }
-        }
-
-        public void setOnChangeListener(ChangeListener listener) {
-            mListener = listener;
-            fireChangeEvent();
-        }
-
-        public static interface ChangeListener {
-            void onChange(String settings);
-        }
-    }
     private BrightnessSettingsModel mModel;
 
     private void dbgMsg(String msg) {
@@ -117,8 +79,12 @@ public class MainActivity extends AppCompatActivity {
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 String newVal = editText.getText().toString();
-                mModel.setSettings(newVal);
-                dbgMsg("After OK: " + newVal);
+                try {
+                    mModel.setSettings(newVal);
+                } catch (IllegalArgumentException iae) {
+                    // TODO: proper error message display
+                    dbgMsg(iae.getMessage());
+                }
             }
         });
         
@@ -138,8 +104,12 @@ public class MainActivity extends AppCompatActivity {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     // TODO: Refactor with setPositiveButton
                     String newVal = editText.getText().toString();
-                    mModel.setSettings(newVal);
-                    dbgMsg("After OK: " + newVal);
+                    try {
+                        mModel.setSettings(newVal);
+                    } catch (IllegalArgumentException iae) {
+                        // TODO: proper error message display
+                        dbgMsg(iae.getMessage());
+                    }
                     dialog.dismiss();
                     handled = true;
                 }

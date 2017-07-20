@@ -5,8 +5,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="net.oldev.aBrightnessQS"
-    android:versionCode="000118"
-    android:versionName="0.1.18"
+    android:versionCode="000119"
+    android:versionName="0.1.19"
     tools:ignore="GradleOverrides">
 
     <!-- for writing display brightness settings -->
