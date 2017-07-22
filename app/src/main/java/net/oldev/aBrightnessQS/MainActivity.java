@@ -28,11 +28,14 @@ public class MainActivity extends AppCompatActivity {
         // Now setup the UI
         setContentView(R.layout.activity_main);
 
+        // init member variables 
+        mBrightnessManager = new BrightnessManager(this);
+        mModel = new BrightnessSettingsModel(this);
+        
         // Useful for issues below
         final TextView brightnessPctsOutput = (TextView)findViewById(R.id.brightnessPctsOutput);
 
         // Connect brightnessPctsOutput UI to the model
-        mModel = new BrightnessSettingsModel(this);
         BrightnessSettingsModel.ChangeListener changeListener = new BrightnessSettingsModel.ChangeListener() {            
             @Override
             public void onChange(String settings) {
@@ -44,7 +47,6 @@ public class MainActivity extends AppCompatActivity {
 
 
         // Hook a dialog to change brightness levels
-        mBrightnessManager = new BrightnessManager(this);
 
         final View brightnessPctsSection = findViewById(R.id.brightnessPctsSection);
         brightnessPctsSection.setOnClickListener(new View.OnClickListener() {
@@ -54,16 +56,23 @@ public class MainActivity extends AppCompatActivity {
              }
          });
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
 
         // UI to show current brightness percentage
-        // TODO: update value upon re-entering the screen
+        // It's updated upon re-entering the screen
+        // TODO: after the activity is run, when changes brightness on quick settings
+        // and comes back here, the UI is not updated, as android
+        // 
         final TextView curBrightnessPctOutput = (TextView)findViewById(R.id.curBrightnessPctOutput);
         final int curBrightnessPct = mBrightnessManager.getPct();
         final String curBrightnessPctStr = ( curBrightnessPct != BrightnessManager.BRIGHTNESS_AUTO ? 
                                                 curBrightnessPct + "%" :
                                                  getResources().getString(R.string.brightness_auto_label) );
-        curBrightnessPctOutput.setText(curBrightnessPctStr); 
-                 
+        curBrightnessPctOutput.setText(curBrightnessPctStr);                  
     }
 
     private CharSequence getTextOfViewById(int id) {
