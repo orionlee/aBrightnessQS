@@ -52,6 +52,10 @@ public class MainActivity extends AppCompatActivity {
          });
 
 
+        // UI to show current brightness percentage
+        final TextView curBrightnessPctOutput = (TextView)findViewById(R.id.curBrightnessPctOutput);
+        curBrightnessPctOutput.setText("33" + "%"); // TODO: add actual value
+                 
     }
 
     private CharSequence getTextOfViewById(int id) {

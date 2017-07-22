@@ -8,5 +8,5 @@
     <string name="app_name_release" tools:ignore="UnusedResources">Brightness Tile</string>
     <string name="tile_label">Brightness</string>
     <string name="brightness_auto_label">auto</string>
-    <string name="app_greeting">Brightness Quick Settings : <b>Greetings</b>!</string>
+    <string name="app_brightness_level_label">Current brightness level is:</string>
 </resources>

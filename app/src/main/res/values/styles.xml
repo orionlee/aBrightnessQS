@@ -29,6 +29,10 @@
         <item name="android:textColor">@color/colorPrimaryDark</item>
     </style>
 
+    <style name="BodyEmFont" parent="@style/BodyFont">
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <style name="DescFont" parent="@style/BodyFont">
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">@color/colorPrimary</item>
