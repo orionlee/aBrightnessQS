@@ -14,8 +14,8 @@ import java.util.Locale;
 public class BrightnessTileService
    extends TileService {
 
-    private BrightnessManager mBrightnessMgr;
-
+    private BrightnessManager mBrightnessMgr = new BrightnessManager(this);
+        
 
     /**
      * Called when the tile is added to the Quick Settings.
@@ -34,11 +34,6 @@ public class BrightnessTileService
     public void onStartListening() {
         PLog.d("Start listening");
 
-        // TileService instances are created and subsequently discarded
-        // between onStartListening(), ... (e.g., onClick()) and onStopListening
-        // member variables needed are instantiated here.
-        mBrightnessMgr = new BrightnessManager(getApplicationContext());
-        
         mTileUpdater.run();
     }
 
