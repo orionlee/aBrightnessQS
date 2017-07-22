@@ -5,6 +5,7 @@
 ```
 . utils/install_n_logcat.sh
 
+## gradleLB.sh (a private helper that logs output in a file and beep upon success/error)
 gradleLB.sh :app:installDebug
 adb logcat -s BTS:V
 
@@ -13,12 +14,14 @@ gradleLB.sh :app:compileDebugSources
 gradleLB.sh :app:assembleDebug
 adb install -r app/build/outputs/apk/app-debug.apk
 
+## Or (to continously build an apk ready to be installed. Typical problems would stop at task :app:compileDebugSources)
+gradlew --continuous :app:assembleDebug
+ls -l app/build/outputs/apk/app-debug.apk; adb install -r app/build/outputs/apk/app-debug.apk
+
 gradlew --stop
 
-gradleLB.sh :app:compileCompletedDebugJavaWithJavacC
 
 ./gradlew tasks
-./gradlew :app:assembleDebug
 ```
 
 ## Make java language support (redhat version) somewhat work 
