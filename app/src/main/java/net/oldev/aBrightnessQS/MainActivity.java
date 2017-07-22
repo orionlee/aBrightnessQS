@@ -15,6 +15,7 @@ import android.view.KeyEvent;
 public class MainActivity extends AppCompatActivity {
 
     private BrightnessSettingsModel mModel;
+    private BrightnessManager mBrightnessManager;
 
     private void dbgMsg(String msg) {
         android.widget.Toast.makeText(getApplicationContext(), msg, 
@@ -43,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
 
 
         // Hook a dialog to change brightness levels
+        mBrightnessManager = new BrightnessManager(this);
+
         final View brightnessPctsSection = findViewById(R.id.brightnessPctsSection);
         brightnessPctsSection.setOnClickListener(new View.OnClickListener() {
              public void onClick(View v) {
@@ -53,8 +56,13 @@ public class MainActivity extends AppCompatActivity {
 
 
         // UI to show current brightness percentage
+        // TODO: update value upon re-entering the screen
         final TextView curBrightnessPctOutput = (TextView)findViewById(R.id.curBrightnessPctOutput);
-        curBrightnessPctOutput.setText("33" + "%"); // TODO: add actual value
+        final int curBrightnessPct = mBrightnessManager.getPct();
+        final String curBrightnessPctStr = ( curBrightnessPct != BrightnessManager.BRIGHTNESS_AUTO ? 
+                                                curBrightnessPct + "%" :
+                                                 getResources().getString(R.string.brightness_auto_label) );
+        curBrightnessPctOutput.setText(curBrightnessPctStr); 
                  
     }
 
