@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Handler;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.EditText;
@@ -16,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
 
     private BrightnessSettingsModel mModel;
     private BrightnessManager mBrightnessManager;
+    private BrightnessManager.BrightnessContentObserver mBrightnessContentObserver;
 
     private void dbgMsg(String msg) {
         android.widget.Toast.makeText(getApplicationContext(), msg, 
@@ -29,8 +31,17 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // init member variables 
-        mBrightnessManager = new BrightnessManager(this);
         mModel = new BrightnessSettingsModel(this);
+
+        mBrightnessManager = new BrightnessManager(this);
+        mBrightnessContentObserver = mBrightnessManager.new BrightnessContentObserver(new Handler(), 
+            new BrightnessManager.ChangeListener() {
+                @Override 
+                public void onChange(int newBrightnessPct) {
+                    PLog.d("mBrightnessContentObserver.onChange(): " + newBrightnessPct);
+                    doShowCurBrightnessPct(newBrightnessPct);
+                }
+            });
         
         // Useful for issues below
         final TextView brightnessPctsOutput = (TextView)findViewById(R.id.brightnessPctsOutput);
@@ -58,23 +69,38 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    
+    private void doShowCurBrightnessPct(int curBrightnessPct) {
+        final TextView curBrightnessPctOutput = (TextView)findViewById(R.id.curBrightnessPctOutput);
+        final String curBrightnessPctStr = ( curBrightnessPct != BrightnessManager.BRIGHTNESS_AUTO ? 
+                                                curBrightnessPct + "%" :
+                                                 getResources().getString(R.string.brightness_auto_label) );
+        curBrightnessPctOutput.setText(curBrightnessPctStr); 
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
 
         // UI to show current brightness percentage
         // It's updated upon re-entering the screen
-        // TODO: after the activity is run, when changes brightness on quick settings
-        // and comes back here, the UI is not updated, as android
         // 
-        final TextView curBrightnessPctOutput = (TextView)findViewById(R.id.curBrightnessPctOutput);
         final int curBrightnessPct = mBrightnessManager.getPct();
-        final String curBrightnessPctStr = ( curBrightnessPct != BrightnessManager.BRIGHTNESS_AUTO ? 
-                                                curBrightnessPct + "%" :
-                                                 getResources().getString(R.string.brightness_auto_label) );
-        curBrightnessPctOutput.setText(curBrightnessPctStr);                  
+        doShowCurBrightnessPct(curBrightnessPct);
+
+        // Use case: After the activity is run, when changes brightness on quick settings
+        // and comes back here, the UI will not updated by onResume()
+        // Using this change listener to compensate for it.
+        mBrightnessManager.registerOnChange(mBrightnessContentObserver); 
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        // Activity no longer visible: no need to listen to brightness change anymore.
+        mBrightnessManager.unregisterOnChange(mBrightnessContentObserver); 
+    }
     private CharSequence getTextOfViewById(int id) {
         final TextView tView = (TextView)findViewById(id);
         return tView.getText();
