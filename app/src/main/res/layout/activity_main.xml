@@ -50,15 +50,14 @@
             android:layout_below="@id/brightnessPctsLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Brightness Levels (in %) through which the toggle will roate, comma-separated. " /> 
+            android:text="Brightness Levels (in %) through which the tile would rotate, comma-separated. Use 999 for auto." /> 
 
         <TextView
             android:id="@+id/brightnessPctsOutput"
             style="@style/ValueFont"
             android:layout_below="@id/brightnessPctsLabelDesc"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="1,5,10,40,100 TODO" />
+            android:layout_height="wrap_content" />
     </RelativeLayout>
 
 </LinearLayout>
