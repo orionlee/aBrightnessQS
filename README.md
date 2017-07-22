@@ -4,21 +4,21 @@
 - useful when the quick settings is in compact mode (without the brightness sliders)
 
 ## TODOS
-- toggle through brightness steps: 
+- [x] toggle through brightness steps basics: 
   - [x] use predefined / hardcoded steps
-  - UI to configure the steps
+  - [x] UI to configure the steps
     - [x] UI prototype 
     - [x] Implement persistence
 - [x] Use percentage consistent with system default brightness slider UI
   - [x] standalone conversion with unit test
   - [x] unit test refactor: https://github.com/junit-team/junit4/wiki/Parameterized-tests , https://github.com/junit-team/junit4/wiki/Exception-testing
   - [x] integrate with TileService
-- Misc. UI Polish
-  - settings error reporting
-  - show current percentage at MainActivity UI
-- UI to request WRITE_SETTINGS permission
-- Misc. code refactoring
-- Improve responsiveness by implementing background service to monitor brightness changes
+- [ ] Misc. UI Polish
+  - [ ] settings error reporting (for invalid level string)
+  - [x] show current percentage at MainActivity UI
+- [ ] UI to request WRITE_SETTINGS permission
+- [ ] Misc. code refactoring
+- [ ] Improve responsiveness by implementing background service to monitor brightness changes
 - [x] Experiment to try to increase snappiness of brightness change upon click
   - v0.1.9: base (try to update icon if applicable)
   - v0.1.10 : do not update tile at all
@@ -41,6 +41,6 @@
         - One possible enhancement is to use `META_DATA_ACTIVE_TILE` 
 - [x] Debug build use a different name. See https://stackoverflow.com/a/41301021
 - [x] Get a release build (requires a certificate)
-- drawing percentage over the tile icon?
-- Refactor some codes with closures, which requires using Java 8 (jack toolchain)
+- [ ] Refactor some codes with closures, which requires using Java 8 (jack toolchain)
+- (probably not desirable) drawing percentage over the tile icon?
 - (Not possible) NoUse SVG for launch icon
