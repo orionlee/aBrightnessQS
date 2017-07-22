@@ -14,7 +14,7 @@ import java.util.Locale;
 public class BrightnessTileService
    extends TileService {
 
-    private final BrightnessManager mBrightnessMgr = new BrightnessManager(getApplicationContext());
+    private BrightnessManager mBrightnessMgr;
 
 
     /**
@@ -34,6 +34,11 @@ public class BrightnessTileService
     public void onStartListening() {
         PLog.d("Start listening");
 
+        // TileService instances are created and subsequently discarded
+        // between onStartListening(), ... (e.g., onClick()) and onStopListening
+        // member variables needed are instantiated here.
+        mBrightnessMgr = new BrightnessManager(getApplicationContext());
+        
         mTileUpdater.run();
     }
 
