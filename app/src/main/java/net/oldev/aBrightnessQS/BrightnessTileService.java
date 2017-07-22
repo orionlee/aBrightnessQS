@@ -6,7 +6,6 @@ import android.graphics.drawable.Icon;
 import android.os.Build;
 import android.service.quicksettings.Tile;
 import android.service.quicksettings.TileService;
-import android.util.Log;
 
 import java.util.Locale;
 
@@ -14,19 +13,6 @@ import java.util.Locale;
 @TargetApi(Build.VERSION_CODES.N)
 public class BrightnessTileService
    extends TileService {
-
-    private void warn(String msg, Throwable t) {
-        Log.w("BTS", msg, t);
-    }
-
-    private void debug(String msg) {
-        Log.d("BTS", msg);
-    }
-
-    // Intended to be used sparringly
-    private void verbose(String msg) {
-        Log.v("BTS", msg);
-    }
 
     private final BrightnessManager mBrightnessMgr = new BrightnessManager(getApplicationContext());
 
@@ -38,7 +24,7 @@ public class BrightnessTileService
 
     @Override
     public void onTileAdded() {
-        debug("Tile added");
+        PLog.d("Tile added");
     }
 
     /**
@@ -46,7 +32,7 @@ public class BrightnessTileService
      */
     @Override
     public void onStartListening() {
-        debug("Start listening");
+        PLog.d("Start listening");
 
         mTileUpdater.run();
     }
@@ -78,7 +64,7 @@ public class BrightnessTileService
      */
     @Override
     public void onClick() {
-        debug("Tile tapped");
+        PLog.d("Tile tapped");
 
         if (mBrightnessMgr.canSetPct()) {            
             int pctToSet = getNextLevelInPct(mBrightnessMgr.getPct()); 
@@ -103,7 +89,7 @@ public class BrightnessTileService
      */
     @Override
     public void onStopListening() {
-        debug("Stop Listening");
+        PLog.d("Stop Listening");
     }
 
     /**
@@ -111,7 +97,7 @@ public class BrightnessTileService
      */
     @Override
     public void onTileRemoved() {
-        debug("Tile removed");
+        PLog.d("Tile removed");
     }
 
 
@@ -150,10 +136,10 @@ public class BrightnessTileService
         public void run() {
             int brightnessPct = parent.mBrightnessMgr.getPct();
             if (brightnessPct == msPrevBrightnessPct) {
-                parent.verbose("TileUpdater: no change in brightness. No Update.");
+                PLog.v("TileUpdater: no change in brightness. No Update.");
                 return;
             }
-            parent.debug("TileUpdater: Brightness% change detected - prev: " + msPrevBrightnessPct + " , current: " + brightnessPct);
+            PLog.d("TileUpdater: Brightness% change detected - prev: " + msPrevBrightnessPct + " , current: " + brightnessPct);
 
             // TODO: consider to supply an user option of not updating tile
             // if the intermittent stalling (with multiple clicks) cannot be fixed

@@ -2,28 +2,12 @@ package net.oldev.aBrightnessQS;
 
 import android.content.Context;
 
-import android.util.Log; // TODO: to refactor
 
 /**
  * Encapsulates the access to screen brightness
  */
 public class BrightnessManager {
     public static final int BRIGHTNESS_AUTO = BrightnessSettingsModel.BRIGHTNESS_AUTO;
-
-    // TODO: To refactor
-    private void warn(String msg, Throwable t) {
-        Log.w("BTS", msg, t);
-    }
-
-    private void debug(String msg) {
-        Log.d("BTS", msg);
-    }
-
-    // Intended to be used sparringly
-    private void verbose(String msg) {
-        Log.v("BTS", msg);
-    }
-
     
     private final Context mContext;
     public BrightnessManager(Context context) {
@@ -39,7 +23,7 @@ public class BrightnessManager {
             pct = SysBrightnessToUISliderPctConverter.sysBrightnessToUiPct(brightness);
         }
         // for debugging brightness - UI slider percentage
-        verbose("BrightnessManager.getPct():  brightness=" + brightness + " ; pct=" + pct);
+        PLog.v("BrightnessManager.getPct():  brightness=" + brightness + " ; pct=" + pct);
 
         return pct;
     }
@@ -54,7 +38,7 @@ public class BrightnessManager {
     public void setPct(int pct) {
         if (pct == BRIGHTNESS_AUTO) {
             setAuto();
-            verbose("BrightnessManager.setPct(): auto");
+            PLog.v("BrightnessManager.setPct(): auto");
         } else {
             int brightness = SysBrightnessToUISliderPctConverter.uiPctToSysBrightness(pct);
             // ensure minimum level of brightness (aka 0%)
@@ -64,7 +48,7 @@ public class BrightnessManager {
                 brightness = 1;
             }
             setManual(brightness);
-            verbose("BrightnessManager.setPct(): pct=" + pct + " ; brightness=" + brightness);
+            PLog.v("BrightnessManager.setPct(): pct=" + pct + " ; brightness=" + brightness);
         }
     }
 
@@ -97,7 +81,7 @@ public class BrightnessManager {
                 current = BRIGHTNESS_AUTO;
             }
         } catch (android.provider.Settings.SettingNotFoundException ex) {
-            warn("BrightnessManager.get() error. Returning Maximum to be safe",  ex);
+            PLog.w("BrightnessManager.get() error. Returning Maximum to be safe",  ex);
             current = 255;
         }
         return current;
