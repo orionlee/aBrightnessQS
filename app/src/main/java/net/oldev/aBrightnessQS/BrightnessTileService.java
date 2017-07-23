@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.graphics.drawable.Icon;
 import android.os.Build;
+import 	android.os.AsyncTask;
 import android.service.quicksettings.Tile;
 import android.service.quicksettings.TileService;
 
@@ -133,7 +134,59 @@ public class BrightnessTileService
                 return R.drawable.tile_brightness_black_0_24dp;                                
             }
         }
+
+        private class UpdateTileIconWithResourceTask extends AsyncTask<Integer, Void, Icon> {
+            private long mPerfBgS; /// PERF
+            @Override
+            protected Icon doInBackground(Integer... iconRsrcIds) {
+                mPerfBgS = System.currentTimeMillis(); /// PERF
+                if (iconRsrcIds.length != 1) {
+                    throw new IllegalArgumentException("UpdateTileIconWithResourceTask.execute(int): must have exactly 1 argument. " + 
+                        "Actual number of arguments: " + iconRsrcIds.length);
+                }
+                final int iconRsrcId = iconRsrcIds[0];
+                final Icon res = Icon.createWithResource(parent.getApplicationContext(), iconRsrcId);
+                final long perfElapsed = System.currentTimeMillis() - mPerfBgS; /// PERF
+                PLog.v("UpdateTileIconWithResourceTask.doInBackground() [in ms]: " + perfElapsed); /// PERF
+                return res;
+            }
+
+            @Override
+            protected void onPostExecute(Icon resultIcon) {
+                final long perfS = System.currentTimeMillis(); /// PERF
+                Tile tile = parent.getQsTile();
+                tile.setIcon(resultIcon);
+                tile.updateTile();                
+                final long perfElapsed = System.currentTimeMillis() - perfS; /// PERF
+                final long perfElapsedTotal = System.currentTimeMillis() - mPerfBgS; /// PERF the *elapsed* time in performing the task, including timethe main UI thread maybe busy with something else
+                PLog.v("UpdateTileIconWithResourceTask.onPostExecute() [in ms]: " + perfElapsed); /// PERF
+                PLog.v("UpdateTileIconWithResourceTask#totalElapsed [in ms]: " + perfElapsedTotal); /// PERF
+            }
+        }
+
         public void run() {
+            int brightnessPct = parent.mBrightnessMgr.getPct();
+            if (brightnessPct == msPrevBrightnessPct) {
+                PLog.v("TileUpdater: no change in brightness. No Update.");
+                return;
+            }
+            PLog.d("TileUpdater: Brightness% change detected - prev: " + msPrevBrightnessPct + " , current: " + brightnessPct);
+            
+            int newIconRsrcId;
+            if (brightnessPct != BrightnessManager.BRIGHTNESS_AUTO) {
+                newIconRsrcId = brightnessPctToIconRsrcId(brightnessPct);
+            } else {
+                newIconRsrcId = R.drawable.tile_brightness_black_auto_24dp;
+            }
+
+            // Update tile UI async
+            new  UpdateTileIconWithResourceTask().execute(newIconRsrcId);
+
+            // remember current level for subequent uses
+            msPrevBrightnessPct = brightnessPct;
+        }
+
+        public void runSync() {
             int brightnessPct = parent.mBrightnessMgr.getPct();
             if (brightnessPct == msPrevBrightnessPct) {
                 PLog.v("TileUpdater: no change in brightness. No Update.");
