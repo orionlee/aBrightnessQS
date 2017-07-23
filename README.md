@@ -13,12 +13,16 @@
   - [x] standalone conversion with unit test
   - [x] unit test refactor: https://github.com/junit-team/junit4/wiki/Parameterized-tests , https://github.com/junit-team/junit4/wiki/Exception-testing
   - [x] integrate with TileService
+- [ ] Improve responsiveness by implementing background service to monitor brightness 
+- [ ] Different devices have differing brightness slider implementation. Consider adapt percentage to differing devices. E.g., 
+     - a slider as perceived brightness, which has a non-linear relationship with  underlying system brigntess value, found in ASUS tables
+     - a sldier that has a simple linear relationship to underlying system brightness, found in Motorola phones.
 - [ ] Misc. UI Polish
   - [ ] settings error reporting (for invalid level string)
   - [x] show current percentage at MainActivity UI
 - [ ] UI to request WRITE_SETTINGS permission
 - [ ] Misc. code refactoring
-- [ ] Improve responsiveness by implementing background service to monitor brightness changes
+changes
 - [x] Experiment to try to increase snappiness of brightness change upon click
   - v0.1.9: base (try to update icon if applicable)
   - v0.1.10 : do not update tile at all
