@@ -47,7 +47,7 @@
             style="@style/BodyFont"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Brightness Levels" /> <!-- @string/brightnessPctsLabel -->
+            android:text="@string/brightness_pcts_label" /> 
 
         <TextView
             android:id="@+id/brightnessPctsLabelDesc"
@@ -55,7 +55,7 @@
             android:layout_below="@id/brightnessPctsLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Brightness Levels (in %) through which the tile would rotate, comma-separated. Use 999 for auto." /> 
+            android:text="@string/brightness_pcts_label_desc"/>
 
         <TextView
             android:id="@+id/brightnessPctsOutput"
