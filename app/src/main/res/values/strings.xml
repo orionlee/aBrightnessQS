@@ -7,6 +7,7 @@
     <string name="app_name_debug" tools:ignore="UnusedResources">Brightness Tile (Dev)</string>
     <string name="app_name_release" tools:ignore="UnusedResources">Brightness Tile</string>
     <string name="service_label">Brightness Tile Update Service</string>
+    <string name="boot_receiver_label">Brightness Tile Start at Boot Receiver</string>
 
     <string name="tile_label">Brightness</string>
     <string name="brightness_auto_label">auto</string>

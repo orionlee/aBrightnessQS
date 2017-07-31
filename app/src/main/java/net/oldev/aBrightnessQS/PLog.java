@@ -12,6 +12,10 @@ public class PLog {
         Log.w("BTS", msg, t);
     }
 
+    public static void w(String msg) {
+        Log.w("BTS", msg);
+    }
+    
     // TODO: add helpers that have parametrized string so that message
     // need not be built.
     

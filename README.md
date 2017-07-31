@@ -16,7 +16,9 @@
 - [ ] Improve responsiveness by implementing background service to monitor brightness 
   - [x] change Tile service to Active Tile
   - [x] barebone service 
-  - [] auto start on boot
+  - [x] auto start on boot
+- [ ] Use a linear Percentage Converter for now (Motorola devices)
+  - [ ]show percentage on tile UI
 - [ ] Different devices have differing brightness slider implementation. Consider adapt percentage to differing devices. E.g., 
      - a slider as perceived brightness, which has a non-linear relationship with  underlying system brigntess value, found in ASUS tables
      - a sldier that has a simple linear relationship to underlying system brightness, found in Motorola phones.
