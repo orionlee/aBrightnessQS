@@ -1,5 +1,6 @@
 package net.oldev.aBrightnessQS;
 
+import java.lang.reflect.Constructor;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -15,21 +16,35 @@ import static org.junit.Assert.*;
 
 public class SysBrightnessToUISliderPctConverterTest {
 
+    private static SysBrightnessToUISliderPctConverterI newOf(Class<? extends SysBrightnessToUISliderPctConverterI> clazz) {
+        try {
+            Constructor<? extends SysBrightnessToUISliderPctConverterI> cons = clazz.getConstructor();
+            SysBrightnessToUISliderPctConverterI obj = cons.newInstance();
+            return obj;
+        } catch (Exception e) {
+            throw new RuntimeException("Unexpected exception in creating a SysBrightnessToUISliderPctConverterI instance for test", e);
+        }
+    }
+
     @RunWith(Parameterized.class)
     public static class PositiveTest {
 
-        @Parameters(name = "{index}: uiPctToSysBrightness({0})={1}")
+        @Parameters(name = "{index}: <{0}> uiPctToSysBrightness({1})={2}")
         public static Iterable<Object[]> data() {
+            Class<? extends SysBrightnessToUISliderPctConverterI> cRl = SysBrightnessToUISliderPctConverterRelLuminanceImpl.class;
             return Arrays.asList(new Object[][] { 
-                    { 0, 0 }, { 10, 1 }, { 20, 6 }, { 25, 10 }, 
-                    { 50, 50 }, { 75, 130 }, { 100, 255 }
+                    { cRl, 0, 0 }, { cRl, 10, 1 }, { cRl, 20, 6 }, { cRl, 25, 10 }, 
+                    { cRl, 50, 50 }, { cRl, 75, 130 }, { cRl, 100, 255 }
             });
         }
 
         @Parameter
-        public int uiPctInTest;
+        public Class<? extends SysBrightnessToUISliderPctConverterI> clazzToTest;
 
         @Parameter(1)
+        public int uiPctInTest;
+
+        @Parameter(2)
         public int sysBrightnessExpected;
 
         // Test driver for positive tests.
@@ -37,7 +52,7 @@ public class SysBrightnessToUISliderPctConverterTest {
         // then convert it back.
         @Test
         public void tWithUiPct() throws Exception {
-            final SysBrightnessToUISliderPctConverterI c = new SysBrightnessToUISliderPctConverterRelLuminanceImpl();
+            final SysBrightnessToUISliderPctConverterI c = newOf(clazzToTest);
             final int sysBrightnessActual = c.uiPctToSysBrightness(uiPctInTest);
             assertEquals("1) uiPct to sysBrightness conversion:",  sysBrightnessExpected, sysBrightnessActual);
 
@@ -57,12 +72,18 @@ public class SysBrightnessToUISliderPctConverterTest {
     @RunWith(Parameterized.class)
     public static class Negative4UiPctTest {
 
-        @Parameters(name = "{index}: uiPct={0}")
-        public static Object[] data() {
-            return new Object[] { -1, 101 };
+        @Parameters(name = "{index}: <{0}> uiPct={1}")
+        public static Iterable<Object[]> data() {
+            Class<? extends SysBrightnessToUISliderPctConverterI> cRl = SysBrightnessToUISliderPctConverterRelLuminanceImpl.class;
+            return Arrays.asList(new Object[][] { 
+                {cRl, -1}, {cRl, 101} 
+            });
         }
         
         @Parameter
+        public Class<? extends SysBrightnessToUISliderPctConverterI> clazzToTest;
+
+        @Parameter(1)
         public int uiPct;
 
         @Rule
@@ -71,7 +92,7 @@ public class SysBrightnessToUISliderPctConverterTest {
         @Test
         public void test() throws Exception {
             thrown.expect(IllegalArgumentException.class);
-            final SysBrightnessToUISliderPctConverterI c = new SysBrightnessToUISliderPctConverterRelLuminanceImpl();
+            final SysBrightnessToUISliderPctConverterI c = newOf(clazzToTest);
             int sysBrightnessActual = c.uiPctToSysBrightness(uiPct);
         }
     }
@@ -79,12 +100,18 @@ public class SysBrightnessToUISliderPctConverterTest {
     @RunWith(Parameterized.class)
     public static class Negative4SysBrightnessTest {
 
-        @Parameters(name = "{index}: sysBrightness={0}")
-        public static Object[] data() {
-            return new Object[] { -1, 256 };
+        @Parameters(name = "{index}: <{0}> sysBrightness={1}")
+        public static Iterable<Object[]> data() {
+            Class<? extends SysBrightnessToUISliderPctConverterI> cRl = SysBrightnessToUISliderPctConverterRelLuminanceImpl.class;
+            return Arrays.asList(new Object[][] { 
+                {cRl, -1}, {cRl, 256} 
+            });
         }
 
         @Parameter
+        public Class<? extends SysBrightnessToUISliderPctConverterI> clazzToTest;
+
+        @Parameter(1)
         public int sysBrightness;
 
         @Rule
@@ -93,7 +120,7 @@ public class SysBrightnessToUISliderPctConverterTest {
         @Test
         public void test() throws Exception {
             thrown.expect(IllegalArgumentException.class);
-            final SysBrightnessToUISliderPctConverterI c = new SysBrightnessToUISliderPctConverterRelLuminanceImpl();
+            final SysBrightnessToUISliderPctConverterI c = newOf(clazzToTest);
             int uiPctActual = c.sysBrightnessToUiPct(sysBrightness);
         }
     }    
