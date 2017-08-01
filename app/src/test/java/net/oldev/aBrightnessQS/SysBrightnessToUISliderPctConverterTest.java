@@ -16,19 +16,19 @@ import static org.junit.Assert.*;
 
 public class SysBrightnessToUISliderPctConverterTest {
 
-    private static SysBrightnessToUISliderPctConverterI newOf(Class<? extends SysBrightnessToUISliderPctConverterI> clazz) {
+    private static SysBrightnessToUISliderPctConverter newOf(Class<? extends SysBrightnessToUISliderPctConverter> clazz) {
         try {
-            Constructor<? extends SysBrightnessToUISliderPctConverterI> cons = clazz.getConstructor();
-            SysBrightnessToUISliderPctConverterI obj = cons.newInstance();
+            Constructor<? extends SysBrightnessToUISliderPctConverter> cons = clazz.getConstructor();
+            SysBrightnessToUISliderPctConverter obj = cons.newInstance();
             return obj;
         } catch (Exception e) {
-            throw new RuntimeException("Unexpected exception in creating a SysBrightnessToUISliderPctConverterI instance for test", e);
+            throw new RuntimeException("Unexpected exception in creating a SysBrightnessToUISliderPctConverter instance for test", e);
         }
     }
 
     // Convenience references for the implmentation calsses udner test
-    private static Class<? extends SysBrightnessToUISliderPctConverterI> cRl = SysBrightnessToUISliderPctConverterRelLuminanceImpl.class;
-    private static Class<? extends SysBrightnessToUISliderPctConverterI> cLi = SysBrightnessToUISliderPctConverterLinearImpl.class;            
+    private static Class<? extends SysBrightnessToUISliderPctConverter> cRl = SysBrightnessToUISliderPctConverterRelLuminanceImpl.class;
+    private static Class<? extends SysBrightnessToUISliderPctConverter> cLi = SysBrightnessToUISliderPctConverterLinearImpl.class;            
 
     @RunWith(Parameterized.class)
     public static class PositiveTest {
@@ -44,7 +44,7 @@ public class SysBrightnessToUISliderPctConverterTest {
         }
 
         @Parameter
-        public Class<? extends SysBrightnessToUISliderPctConverterI> clazzToTest;
+        public Class<? extends SysBrightnessToUISliderPctConverter> clazzToTest;
 
         @Parameter(1)
         public int uiPctInTest;
@@ -57,7 +57,7 @@ public class SysBrightnessToUISliderPctConverterTest {
         // then convert it back.
         @Test
         public void tWithUiPct() throws Exception {
-            final SysBrightnessToUISliderPctConverterI c = newOf(clazzToTest);
+            final SysBrightnessToUISliderPctConverter c = newOf(clazzToTest);
             final int sysBrightnessActual = c.uiPctToSysBrightness(uiPctInTest);
             assertEquals("1) uiPct to sysBrightness conversion:",  sysBrightnessExpected, sysBrightnessActual);
 
@@ -86,7 +86,7 @@ public class SysBrightnessToUISliderPctConverterTest {
         }
         
         @Parameter
-        public Class<? extends SysBrightnessToUISliderPctConverterI> clazzToTest;
+        public Class<? extends SysBrightnessToUISliderPctConverter> clazzToTest;
 
         @Parameter(1)
         public int uiPct;
@@ -97,7 +97,7 @@ public class SysBrightnessToUISliderPctConverterTest {
         @Test
         public void test() throws Exception {
             thrown.expect(IllegalArgumentException.class);
-            final SysBrightnessToUISliderPctConverterI c = newOf(clazzToTest);
+            final SysBrightnessToUISliderPctConverter c = newOf(clazzToTest);
             int sysBrightnessActual = c.uiPctToSysBrightness(uiPct);
         }
     }
@@ -114,7 +114,7 @@ public class SysBrightnessToUISliderPctConverterTest {
         }
 
         @Parameter
-        public Class<? extends SysBrightnessToUISliderPctConverterI> clazzToTest;
+        public Class<? extends SysBrightnessToUISliderPctConverter> clazzToTest;
 
         @Parameter(1)
         public int sysBrightness;
@@ -125,7 +125,7 @@ public class SysBrightnessToUISliderPctConverterTest {
         @Test
         public void test() throws Exception {
             thrown.expect(IllegalArgumentException.class);
-            final SysBrightnessToUISliderPctConverterI c = newOf(clazzToTest);
+            final SysBrightnessToUISliderPctConverter c = newOf(clazzToTest);
             int uiPctActual = c.sysBrightnessToUiPct(sysBrightness);
         }
     }    

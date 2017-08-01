@@ -21,7 +21,7 @@ import static java.lang.Math.log10;
  * @see https://en.wikipedia.org/wiki/Lightness for details of the relationship 
  *  between the two concepts.
  */
-public class SysBrightnessToUISliderPctConverterRelLuminanceImpl implements SysBrightnessToUISliderPctConverterI {
+public class SysBrightnessToUISliderPctConverterRelLuminanceImpl extends SysBrightnessToUISliderPctConverter {
     // Current implmentation uses 
     // Moon and Spencer (1943) formula described in the wiki
     //   `V = 1.4 * Y ^ 0.426`
@@ -36,9 +36,7 @@ public class SysBrightnessToUISliderPctConverterRelLuminanceImpl implements SysB
 
     private static final double Y_TO_BRIGHTNESS_RATIO = 255d / 100d;
 
-    public int uiPctToSysBrightness(int uiPct) {
-        validateUiPct(uiPct, "uiPctToSysBrightness()");
-
+    protected int doUiPctToSysBrightness(int uiPct) {
         // convert from percentage (0-100) to V (in a 0-10) scale
         final double ligthnessV = uiPct / 10d;
 
@@ -49,9 +47,7 @@ public class SysBrightnessToUISliderPctConverterRelLuminanceImpl implements SysB
  
         return sysBrightness;
     }
-    public int sysBrightnessToUiPct(int sysBrightness) {
-        validateSysBrightness(sysBrightness, "sysBrightnessToUiPct()");
-
+    protected int doSysBrightnessToUiPct(int sysBrightness) {
         final double relLuminanceYInPct = sysBrightness / Y_TO_BRIGHTNESS_RATIO;
 
         // Follow the formula 
@@ -63,15 +59,4 @@ public class SysBrightnessToUISliderPctConverterRelLuminanceImpl implements SysB
         return uiPct;
     }
   
-    private static void validateUiPct(int uiPct, String errMsgPrefix) {
-        if (uiPct < 0 || uiPct > 100) {
-            throw new IllegalArgumentException(errMsgPrefix + " uiPct must be an int between 0 and 100. Actual:<" + uiPct + ">");
-        }
-    }
-
-    private static void validateSysBrightness(int sysBrightness, String errMsgPrefix) {
-        if (sysBrightness < 0 || sysBrightness > 255) {
-            throw new IllegalArgumentException(errMsgPrefix + " sysBrightness must be an int between 0 and 255. Actual:<" + sysBrightness + ">");
-        }        
-    }
 }

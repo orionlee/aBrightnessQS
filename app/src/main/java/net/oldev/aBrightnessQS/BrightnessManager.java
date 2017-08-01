@@ -16,7 +16,7 @@ public class BrightnessManager {
     public static final int BRIGHTNESS_AUTO = BrightnessSettingsModel.BRIGHTNESS_AUTO;
     
     private final Context mContext;
-    private SysBrightnessToUISliderPctConverterI mConverter;
+    private SysBrightnessToUISliderPctConverter mConverter;
     public BrightnessManager(Context context) {
         mContext = context;
         mConverter = new SysBrightnessToUISliderPctConverterRelLuminanceImpl();
