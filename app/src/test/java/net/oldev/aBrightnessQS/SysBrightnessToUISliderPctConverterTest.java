@@ -26,15 +26,20 @@ public class SysBrightnessToUISliderPctConverterTest {
         }
     }
 
+    // Convenience references for the implmentation calsses udner test
+    private static Class<? extends SysBrightnessToUISliderPctConverterI> cRl = SysBrightnessToUISliderPctConverterRelLuminanceImpl.class;
+    private static Class<? extends SysBrightnessToUISliderPctConverterI> cLi = SysBrightnessToUISliderPctConverterLinearImpl.class;            
+
     @RunWith(Parameterized.class)
     public static class PositiveTest {
 
         @Parameters(name = "{index}: <{0}> uiPctToSysBrightness({1})={2}")
         public static Iterable<Object[]> data() {
-            Class<? extends SysBrightnessToUISliderPctConverterI> cRl = SysBrightnessToUISliderPctConverterRelLuminanceImpl.class;
             return Arrays.asList(new Object[][] { 
                     { cRl, 0, 0 }, { cRl, 10, 1 }, { cRl, 20, 6 }, { cRl, 25, 10 }, 
-                    { cRl, 50, 50 }, { cRl, 75, 130 }, { cRl, 100, 255 }
+                    { cRl, 50, 50 }, { cRl, 75, 130 }, { cRl, 100, 255 },
+                    { cLi, 0, 0 }, { cLi, 1, 3 }, { cLi, 5, 13 }, { cLi, 25, 64 }, 
+                    { cLi, 50, 128 }, { cLi, 75, 191 }, { cLi, 100, 255 }
             });
         }
 
@@ -74,9 +79,9 @@ public class SysBrightnessToUISliderPctConverterTest {
 
         @Parameters(name = "{index}: <{0}> uiPct={1}")
         public static Iterable<Object[]> data() {
-            Class<? extends SysBrightnessToUISliderPctConverterI> cRl = SysBrightnessToUISliderPctConverterRelLuminanceImpl.class;
             return Arrays.asList(new Object[][] { 
-                {cRl, -1}, {cRl, 101} 
+                {cRl, -1}, {cRl, 101}, 
+                {cLi, -1}, {cLi, 101} 
             });
         }
         
@@ -102,9 +107,9 @@ public class SysBrightnessToUISliderPctConverterTest {
 
         @Parameters(name = "{index}: <{0}> sysBrightness={1}")
         public static Iterable<Object[]> data() {
-            Class<? extends SysBrightnessToUISliderPctConverterI> cRl = SysBrightnessToUISliderPctConverterRelLuminanceImpl.class;
             return Arrays.asList(new Object[][] { 
-                {cRl, -1}, {cRl, 256} 
+                {cRl, -1}, {cRl, 256},  
+                {cLi, -1}, {cLi, 256}  
             });
         }
 
