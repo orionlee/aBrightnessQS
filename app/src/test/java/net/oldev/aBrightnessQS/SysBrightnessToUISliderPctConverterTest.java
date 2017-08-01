@@ -37,7 +37,7 @@ public class SysBrightnessToUISliderPctConverterTest {
         // then convert it back.
         @Test
         public void tWithUiPct() throws Exception {
-            final SysBrightnessToUISliderPctConverterI c = new SysBrightnessToUISliderPctConverter();
+            final SysBrightnessToUISliderPctConverterI c = new SysBrightnessToUISliderPctConverterRelLuminanceImpl();
             final int sysBrightnessActual = c.uiPctToSysBrightness(uiPctInTest);
             assertEquals("1) uiPct to sysBrightness conversion:",  sysBrightnessExpected, sysBrightnessActual);
 
@@ -71,7 +71,7 @@ public class SysBrightnessToUISliderPctConverterTest {
         @Test
         public void test() throws Exception {
             thrown.expect(IllegalArgumentException.class);
-            final SysBrightnessToUISliderPctConverterI c = new SysBrightnessToUISliderPctConverter();
+            final SysBrightnessToUISliderPctConverterI c = new SysBrightnessToUISliderPctConverterRelLuminanceImpl();
             int sysBrightnessActual = c.uiPctToSysBrightness(uiPct);
         }
     }
@@ -93,7 +93,7 @@ public class SysBrightnessToUISliderPctConverterTest {
         @Test
         public void test() throws Exception {
             thrown.expect(IllegalArgumentException.class);
-            final SysBrightnessToUISliderPctConverterI c = new SysBrightnessToUISliderPctConverter();
+            final SysBrightnessToUISliderPctConverterI c = new SysBrightnessToUISliderPctConverterRelLuminanceImpl();
             int uiPctActual = c.sysBrightnessToUiPct(sysBrightness);
         }
     }    

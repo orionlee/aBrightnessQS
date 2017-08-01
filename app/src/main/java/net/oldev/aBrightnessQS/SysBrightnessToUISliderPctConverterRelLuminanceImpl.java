@@ -21,7 +21,7 @@ import static java.lang.Math.log10;
  * @see https://en.wikipedia.org/wiki/Lightness for details of the relationship 
  *  between the two concepts.
  */
-public class SysBrightnessToUISliderPctConverter implements SysBrightnessToUISliderPctConverterI {
+public class SysBrightnessToUISliderPctConverterRelLuminanceImpl implements SysBrightnessToUISliderPctConverterI {
     // Current implmentation uses 
     // Moon and Spencer (1943) formula described in the wiki
     //   `V = 1.4 * Y ^ 0.426`
@@ -32,7 +32,7 @@ public class SysBrightnessToUISliderPctConverter implements SysBrightnessToUISli
     //   JOSA. 33 (5): 270–277. doi:10.1364/JOSA.33.000270
     //   https://www.osapublishing.org/josa/abstract.cfm?uri=josa-33-5-270
 
-    public SysBrightnessToUISliderPctConverter() {}
+    public SysBrightnessToUISliderPctConverterRelLuminanceImpl() {}
 
     private static final double Y_TO_BRIGHTNESS_RATIO = 255d / 100d;
 
