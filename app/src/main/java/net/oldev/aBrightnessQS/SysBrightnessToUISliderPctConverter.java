@@ -10,7 +10,8 @@ import static java.lang.Math.log10;
  *   android.provider.Settings.System.SCREEN_BRIGHTNESS
  * - UI Percentage as represented by system default screen brightness slider UI
  * 
- * The relationship between the two is not linear: in techical terms,
+ * For some devices, e.g., ASUS, the relationship between the two is not linear.
+ * In techical terms,
  * - SysBrightness is `relative luminance` (0-100%) expressed as between 0 - 255
  * - UI precerntage is `lightness`, or `value`, the percieved brightness
  * 
@@ -20,7 +21,7 @@ import static java.lang.Math.log10;
  * @see https://en.wikipedia.org/wiki/Lightness for details of the relationship 
  *  between the two concepts.
  */
-public class SysBrightnessToUISliderPctConverter {
+public class SysBrightnessToUISliderPctConverter implements SysBrightnessToUISliderPctConverterI {
     // Current implmentation uses 
     // Moon and Spencer (1943) formula described in the wiki
     //   `V = 1.4 * Y ^ 0.426`
@@ -31,10 +32,11 @@ public class SysBrightnessToUISliderPctConverter {
     //   JOSA. 33 (5): 270–277. doi:10.1364/JOSA.33.000270
     //   https://www.osapublishing.org/josa/abstract.cfm?uri=josa-33-5-270
 
+    public SysBrightnessToUISliderPctConverter() {}
 
     private static final double Y_TO_BRIGHTNESS_RATIO = 255d / 100d;
 
-    public static int uiPctToSysBrightness(int uiPct) {
+    public int uiPctToSysBrightness(int uiPct) {
         validateUiPct(uiPct, "uiPctToSysBrightness()");
 
         // convert from percentage (0-100) to V (in a 0-10) scale
@@ -47,7 +49,7 @@ public class SysBrightnessToUISliderPctConverter {
  
         return sysBrightness;
     }
-    public static int sysBrightnessToUiPct(int sysBrightness) {
+    public int sysBrightnessToUiPct(int sysBrightness) {
         validateSysBrightness(sysBrightness, "sysBrightnessToUiPct()");
 
         final double relLuminanceYInPct = sysBrightness / Y_TO_BRIGHTNESS_RATIO;

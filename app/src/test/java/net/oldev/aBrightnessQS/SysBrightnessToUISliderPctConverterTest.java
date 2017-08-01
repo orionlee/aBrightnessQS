@@ -12,7 +12,6 @@ import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 
 import static org.junit.Assert.*;
-import static net.oldev.aBrightnessQS.SysBrightnessToUISliderPctConverter.*;
 
 public class SysBrightnessToUISliderPctConverterTest {
 
@@ -38,13 +37,14 @@ public class SysBrightnessToUISliderPctConverterTest {
         // then convert it back.
         @Test
         public void tWithUiPct() throws Exception {
-            final int sysBrightnessActual = uiPctToSysBrightness(uiPctInTest);
+            final SysBrightnessToUISliderPctConverterI c = new SysBrightnessToUISliderPctConverter();
+            final int sysBrightnessActual = c.uiPctToSysBrightness(uiPctInTest);
             assertEquals("1) uiPct to sysBrightness conversion:",  sysBrightnessExpected, sysBrightnessActual);
 
             // Do reverse conversion test
             //  The exepected result should be the uiPct supplied by the caller
             final int uiPctExpected = uiPctInTest; 
-            final int uiPctConverted = sysBrightnessToUiPct(sysBrightnessActual);
+            final int uiPctConverted = c.sysBrightnessToUiPct(sysBrightnessActual);
 
             // since the conversion involves rounding to integer
             // reverse the conversion could induce slight rounding error
@@ -71,7 +71,8 @@ public class SysBrightnessToUISliderPctConverterTest {
         @Test
         public void test() throws Exception {
             thrown.expect(IllegalArgumentException.class);
-            int sysBrightnessActual = uiPctToSysBrightness(uiPct);
+            final SysBrightnessToUISliderPctConverterI c = new SysBrightnessToUISliderPctConverter();
+            int sysBrightnessActual = c.uiPctToSysBrightness(uiPct);
         }
     }
 
@@ -92,7 +93,8 @@ public class SysBrightnessToUISliderPctConverterTest {
         @Test
         public void test() throws Exception {
             thrown.expect(IllegalArgumentException.class);
-            int uiPctActual = sysBrightnessToUiPct(sysBrightness);
+            final SysBrightnessToUISliderPctConverterI c = new SysBrightnessToUISliderPctConverter();
+            int uiPctActual = c.sysBrightnessToUiPct(sysBrightness);
         }
     }    
     

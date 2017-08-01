@@ -16,8 +16,10 @@ public class BrightnessManager {
     public static final int BRIGHTNESS_AUTO = BrightnessSettingsModel.BRIGHTNESS_AUTO;
     
     private final Context mContext;
+    private SysBrightnessToUISliderPctConverterI mConverter;
     public BrightnessManager(Context context) {
         mContext = context;
+        mConverter = new SysBrightnessToUISliderPctConverter();
     }
     
     public int getPct() {
@@ -26,7 +28,7 @@ public class BrightnessManager {
         if (brightness == BRIGHTNESS_AUTO) {
             pct = BRIGHTNESS_AUTO;
         } else {
-            pct = SysBrightnessToUISliderPctConverter.sysBrightnessToUiPct(brightness);
+            pct = mConverter.sysBrightnessToUiPct(brightness);
         }
         // for debugging brightness - UI slider percentage
         PLog.v("BrightnessManager.getPct():  brightness=" + brightness + " ; pct=" + pct);
@@ -46,7 +48,7 @@ public class BrightnessManager {
             setAuto();
             PLog.v("BrightnessManager.setPct(): auto");
         } else {
-            int brightness = SysBrightnessToUISliderPctConverter.uiPctToSysBrightness(pct);
+            int brightness = mConverter.uiPctToSysBrightness(pct);
             // ensure minimum level of brightness (aka 0%)
             // does not translate to brightness == 0
             // as it might not work for some devices, or might completely black out the screen.
