@@ -19,7 +19,8 @@ public class BrightnessManager {
     private SysBrightnessToUISliderPctConverter mConverter;
     public BrightnessManager(Context context) {
         mContext = context;
-        mConverter = new SysBrightnessToUISliderPctConverterRelLuminanceImpl();
+        // TODO: make converter impl configurable
+        mConverter = new SysBrightnessToUISliderPctConverterLinearImpl();
     }
     
     public int getPct() {

@@ -157,14 +157,20 @@ public class BrightnessTileService
             Tile tile = parent.getQsTile();
 
             int newIconRsrcId;
+            String newLabel;
             if (brightnessPct != BrightnessManager.BRIGHTNESS_AUTO) {
                 newIconRsrcId = brightnessPctToIconRsrcId(brightnessPct);
+                newLabel = brightnessPct + "%";
             } else {
                 newIconRsrcId = R.drawable.tile_brightness_black_auto_24dp;
+                newLabel = parent.getString(R.string.brightness_auto_label);
             }
+
+
              
             // update tile UI finally
             tile.setIcon(Icon.createWithResource(parent.getApplicationContext(), newIconRsrcId));
+            tile.setLabel(newLabel);
             tile.updateTile();
 
             // remember current level for subequent uses
