@@ -11,6 +11,11 @@ class BrightnessSettingsModel {
     private static final String PREFS_BRIGHTNESS_LEVELS = "brightnessLevels";
     private static final String PREFS_BRIGHTNESS_LEVELS_DEFAULTS = "10,30,50,75,100";
     
+    // No need to use WeakReference<Context> pattern to hold Context per
+    //   https://android-developers.googleblog.com/2009/01/avoiding-memory-leaks.html
+    // because an instance's lifecycle is confined within the instantiator, 
+    // (as a private member of the instantiator)
+    // hence no memory leak.
     private final Context mContext;
     
     private ChangeListener mListener = null;

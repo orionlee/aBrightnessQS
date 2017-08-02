@@ -15,6 +15,11 @@ import android.support.annotation.NonNull;
 public class BrightnessManager {
     public static final int BRIGHTNESS_AUTO = BrightnessSettingsModel.BRIGHTNESS_AUTO;
     
+    // No need to use WeakReference<Context> pattern to hold Context per
+    //   https://android-developers.googleblog.com/2009/01/avoiding-memory-leaks.html
+    // because an instance's lifecycle is confined within the instantiator, 
+    // (as a private member of the instantiator)
+    // hence no memory leak.
     private final Context mContext;
     private SysBrightnessToUISliderPctConverter mConverter;
     public BrightnessManager(Context context) {
