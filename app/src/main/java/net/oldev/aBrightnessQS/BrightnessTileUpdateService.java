@@ -10,7 +10,13 @@ import android.os.Handler;
 import android.service.quicksettings.TileService;
 
 /**
- * Listen to changes in brightness to update BrightnessTileService
+ * A service that listens to changes in brightness to update BrightnessTileService.
+ * It is started by:
+ * - after the tile is added: covers initial installation case.
+ * - start after boot: covers normal use case.
+ * - upon clicking the tile / entering MainActivity screen: covers case re-installation, 
+ *   where the existing running service is stopped, but not started again. 
+ *   Hence the service is started again upon any user interaction.
  */
 public class BrightnessTileUpdateService extends Service {
 
@@ -81,6 +87,22 @@ public class BrightnessTileUpdateService extends Service {
 
         mBrightnessManager.registerOnChange(mBrightnessContentObserver);
 
+    }
+
+    /**
+     * Convenience helper to start this background service, 
+     * if it has not been started.
+     */
+    public static ComponentName start(Context ctx) {
+        ComponentName res = ctx.startService(new Intent(ctx.getApplicationContext(), BrightnessTileUpdateService.class));
+        PLog.v("BrightnessTileUpdateService.start(): " + res);
+        return res;
+    }
+
+    public static boolean stop(Context ctx) {
+        boolean res = ctx.stopService(new Intent(ctx.getApplicationContext(), BrightnessTileUpdateService.class));
+        PLog.v("BrightnessTileUpdateService.stop(): " + res);
+        return res;
     }
 
 }

@@ -67,6 +67,12 @@ public class MainActivity extends AppCompatActivity {
              }
          });
 
+        //
+        // Non-UI related
+        //
+
+        // see BrightnessTileUpdateService for the service's starting points
+        BrightnessTileUpdateService.start(this);
     }
 
     

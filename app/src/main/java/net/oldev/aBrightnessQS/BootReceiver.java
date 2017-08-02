@@ -10,9 +10,11 @@ public class BootReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         if ("android.intent.action.BOOT_COMPLETED".equals(intent.getAction())) {
-            Intent startServiceIntent = new Intent(context, BrightnessTileUpdateService.class);
-            ComponentName res = context.startService(startServiceIntent);
-            PLog.d("BootReceiver.onReceive() - starting BrightnessTileUpdateServie: " + res);
+            PLog.d("BootReceiver.onReceive() - starting BrightnessTileUpdateService.");
+
+            // see BrightnessTileUpdateService for the service's starting points
+            BrightnessTileUpdateService.start(context);
+            
         } else {
             PLog.w("BootReceiver.onReceive() - unexpected intent, do nothing:  " + intent);
         }

@@ -17,6 +17,7 @@
   - [x] change Tile service to Active Tile
   - [x] barebone service 
   - [x] auto start on boot
+  - [x] start service upon re-instllation as well.
 - [x] Use a linear Percentage Converter for now (Motorola devices)
   - [x] show percentage on tile UI
 - [ ] Different devices have differing brightness slider implementation. Consider adapt percentage to differing devices. E.g., 

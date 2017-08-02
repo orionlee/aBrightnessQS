@@ -2,8 +2,6 @@ package net.oldev.aBrightnessQS;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.content.ComponentName;
-import android.content.Intent;
 import android.graphics.drawable.Icon;
 import android.os.Build;
 import android.service.quicksettings.Tile;
@@ -27,12 +25,11 @@ public class BrightnessTileService
     @Override
     public void onTileAdded() {
         PLog.d("Tile added");
-     
-        ComponentName res = startService(new Intent(getApplicationContext(), BrightnessTileUpdateService.class));
-        PLog.v("Tile added - startService(): " + res);
-
         // initial UI update, to sync tile UI with current brightness
         mTileUpdater.run();
+
+        // see BrightnessTileUpdateService for the service's starting points
+        BrightnessTileUpdateService.start(this);
     }
 
     /**
@@ -90,6 +87,9 @@ public class BrightnessTileService
             android.widget.Toast.makeText(getApplicationContext(), permissionNeededMsg, 
                     android.widget.Toast.LENGTH_LONG).show();      
         }      
+
+        // see BrightnessTileUpdateService for the service's starting points
+        BrightnessTileUpdateService.start(this);
     }
 
     /**
@@ -106,9 +106,10 @@ public class BrightnessTileService
     @Override
     public void onTileRemoved() {
         PLog.d("Tile removed");
-        boolean res = stopService(new Intent(getApplicationContext(), BrightnessTileUpdateService.class));
-        PLog.v("Tile removed - stopService(): " + res);
+
+        BrightnessTileUpdateService.stop(this);
     }
+
 
 
     // Encapsulates the logic to change the tile UI.
