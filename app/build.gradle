@@ -25,6 +25,8 @@ android {
         targetSdkVersion 24
         versionCode getMyVersionCode()
         versionName "${getMyVersionName()}"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
     signingConfigs {
@@ -85,9 +87,17 @@ android {
 
 }
 
+ext {
+    supportLibVersion = "25.4.0"
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:24.2.1'
-    compile 'com.android.support:support-annotations:24.2.1'
+    // Upgrade support lib version to be compatible with Android Testing Support Library
+    compile "com.android.support:appcompat-v7:$supportLibVersion"
+    compile "com.android.support:support-annotations:$supportLibVersion"
+
+    androidTestCompile 'com.android.support.test:runner:1.0.0'
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:3.0.0'
 }

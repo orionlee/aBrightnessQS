@@ -124,6 +124,8 @@ public class MainActivity extends AppCompatActivity {
         //@see https://developer.android.com/training/keyboard-input/style.html#Action
         //@see https://stackoverflow.com/a/5941620
         editText.setImeOptions(EditorInfo.IME_ACTION_DONE);
+        editText.setId(987654); // TODO: for use in test, set it in id.xml
+
 
         builder.setView(editText);
 

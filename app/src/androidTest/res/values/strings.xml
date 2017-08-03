@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Need to re-specify them androidTest,
+       as the values defined in main does not get included -->
+    <string name="app_name_debug" tools:ignore="UnusedResources">Brightness Tile Android Test (Dev)</string>
+    <string name="app_name_release" tools:ignore="UnusedResources">Brightness Tile Android Test</string>
+</resources>
