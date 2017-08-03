@@ -24,8 +24,9 @@ build.xml
 *~
 
 #IntelliJ project files
-## .idea
-## *.iml
+.idea
+*.iml
+
 ## gen-external-apklibs
 ## out
 
