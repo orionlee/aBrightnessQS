@@ -2,7 +2,6 @@ package net.oldev.aBrightnessQS;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Handler;
 import android.view.View;
@@ -81,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
         final String curBrightnessPctStr = ( curBrightnessPct != BrightnessManager.BRIGHTNESS_AUTO ? 
                                                 curBrightnessPct + "%" :
                                                  getResources().getString(R.string.brightness_auto_label) );
-        curBrightnessPctOutput.setText(curBrightnessPctStr); 
+        curBrightnessPctOutput.setText(curBrightnessPctStr);
     }
 
     @Override
@@ -124,14 +123,14 @@ public class MainActivity extends AppCompatActivity {
         //@see https://developer.android.com/training/keyboard-input/style.html#Action
         //@see https://stackoverflow.com/a/5941620
         editText.setImeOptions(EditorInfo.IME_ACTION_DONE);
-        editText.setId(987654); // TODO: for use in test, set it in id.xml
+        editText.setId(R.id.brightnessPctsInput); // for androidTest
 
 
         builder.setView(editText);
 
         editText.setText(curValue);
         
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(R.string.ok_btn_label, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 String newVal = editText.getText().toString();
                 try {
@@ -143,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         
-        builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.cancel_btn_label, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 // Nothing to do
             }

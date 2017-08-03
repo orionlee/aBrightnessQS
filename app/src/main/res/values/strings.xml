@@ -14,5 +14,7 @@
     <string name="app_brightness_level_label">Current brightness level is:</string>
     <string name="brightness_pcts_label">Brightness Levels</string>
     <string name="brightness_pcts_label_desc" formatted="false">Brightness Levels (in %) through which the tile would rotate, comma-separated. Use 999 for auto. \nNote: Levels below 10% <i><b>might not work</b></i> on some devices. On some devices, the screens would be too dark. Some others would ignore them, and set to some minimum brightness.</string>
+    <string name="ok_btn_label">OK</string>
+    <string name="cancel_btn_label">CANCEL</string>
 
 </resources>
