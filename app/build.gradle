@@ -97,6 +97,7 @@ dependencies {
     // Upgrade support lib version to be compatible with Android Testing Support Library
     compile "com.android.support:appcompat-v7:$supportLibVersion"
     compile "com.android.support:support-annotations:$supportLibVersion"
+    compile "com.android.support:design:$supportLibVersion"
 
     androidTestCompile 'com.android.support.test:runner:1.0.0'
     androidTestCompile 'com.android.support.test.espresso:espresso-core:3.0.0'

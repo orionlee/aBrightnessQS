@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.provider.Settings;
 import android.service.quicksettings.TileService;
+import android.support.design.widget.Snackbar;
 
 /**
  * Helper to manage System Settings Permission UI, in the context of TileService.
@@ -32,14 +33,15 @@ public class SystemSettingsPermissionUIUtil {
     }
 
     private static void showMessage(Context context, int msgResId) {
-        // SnackBar would be more prominent, plus it can stay until the uer dismisses it.
-        // SnackBar, however, is tied to an Activity, of which we do not have here.
-        // So we stick with Toast
-        android.widget.Toast toast = android.widget.Toast.makeText(context.getApplicationContext(), msgResId,
-                android.widget.Toast.LENGTH_LONG);
-        // Show toast at center to make it more prominent to the user
-        toast.setGravity(android.view.Gravity.CENTER, 0, 0);
-        toast.show();
+        // Snackbar problems:
+        // 1. (FATAL) message got truncated: Snackbar design
+        //    probably enforces some height restriction/
+        // 2. shown at the bottom (per Snackbar design). It can be hacked by modifying the
+        //    custom layout created in SnackbarWrapper
+        // 3. The bar flickers for some unknown reason
+        SnackbarWrapper snackbarWrapper = SnackbarWrapper.make(context.getApplicationContext(),
+                context.getString(msgResId), Snackbar.LENGTH_INDEFINITE);
+        snackbarWrapper.show();
     }
 
     // Analogous to ActivityCompat.requestPermissions(Activity ...)
