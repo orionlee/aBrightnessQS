@@ -6,9 +6,11 @@ import android.support.test.filters.SmallTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -28,15 +30,23 @@ import static org.hamcrest.Matchers.is;
 /**
  * A sanity check test for Main UI
  */
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @SmallTest
 @RunWith(AndroidJUnit4.class)
 public class MainActivityTest {
 
+    private static final boolean RELAUNCH_ACTIVITY_TRUE = true;
+
+    // Note: The test relies on the fact the activity is relaunched per test method,
+    // so that we can test settings persistence.
     @Rule
-    public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
+    public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class, false, RELAUNCH_ACTIVITY_TRUE);
+
+    // Used to hold the new levels from test t1 to t2
+    private static String msNewLevelsStr;
 
     @Test
-    public void mainActivityTest() {
+    public void t1ModifySettings() {
         // Click to get dialog to update brightness levels
         ViewInteraction brightnessPctsLayout = onView(
                 allOf(withId(R.id.brightnessPctsSection), isDisplayed()));
@@ -44,15 +54,25 @@ public class MainActivityTest {
 
         // randomize levels to be entered so that the new one is unlikely to be the same as the existing one.
         final int startLevel = (int)(System.currentTimeMillis() % 50) + 1;
-        String newLevelsStr = startLevel + "," + (startLevel+10) + "," + (startLevel+30);
+        msNewLevelsStr = startLevel + "," + (startLevel+10) + "," + (startLevel+30);
 
-        replaceTextInDialog(R.id.brightnessPctsInput, R.string.ok_btn_label, newLevelsStr);
+        replaceTextInDialog(R.id.brightnessPctsInput, R.string.ok_btn_label, msNewLevelsStr);
 
         // Assert the new levels are now displayed.
         onView(withId(R.id.brightnessPctsOutput))
-                .check(matches(withText(newLevelsStr)));
+                .check(matches(withText(msNewLevelsStr)));
 
         /// delay(1000); // for visual inspection
+
+    }
+
+    @Test
+    public void t2SettingsPersisted() {
+        // Re-assert the new levels have been persisted, and are now displayed.
+        // upon activity relaunch.
+        onView(withId(R.id.brightnessPctsOutput))
+                .check(matches(withText(msNewLevelsStr)));
+
     }
 
     /**
