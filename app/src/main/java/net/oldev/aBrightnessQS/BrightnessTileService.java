@@ -76,16 +76,7 @@ public class BrightnessTileService
             mBrightnessMgr.setPct(pctToSet); 
             mTileUpdater.run(); 
         } else {
-            // TODO: launch a request screen 
-            // 1. Use tile.startActivityAndCollapse(Intent) to launch request screen
-            //    @see https://developer.android.com/reference/android/service/quicksettings/TileService.html#startActivityAndCollapse(android.content.Intent)
-            // 2. implmenet the request screen
-            //    @see https://developer.android.com/training/permissions/requesting.html
-            // 
-            // A quick and dirty is to launch com.android.settings.Settings$WriteSettingsActivity for the screen
-            String permissionNeededMsg = "Modify system settings permission required. Please goto Settings > App permissions > Special access > Modify system settings to grant the access";
-            android.widget.Toast.makeText(getApplicationContext(), permissionNeededMsg, 
-                    android.widget.Toast.LENGTH_LONG).show();      
+            SystemSettingsPermissionUIUtil.requestPermission(this);
         }      
 
         // see BrightnessTileUpdateService for the service's starting points
