@@ -1,5 +1,6 @@
 package net.oldev.aBrightnessQS;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.provider.Settings;
@@ -25,12 +26,20 @@ public class SystemSettingsPermissionUIUtil {
         // Note: PowerToggle has an implementation that mimics the general pattern.
         // https://github.com/sunnygoyal/PowerToggles/blob/master/src/com/painless/pc/PermissionDialog.java
 
-        String permissionNeededMsg = tileService.getString(R.string.sys_permission_required_msg);
-        // TODO: Consider to use a snack bar as it is more prominent?!
-        android.widget.Toast.makeText(tileService.getApplicationContext(), permissionNeededMsg,
-                android.widget.Toast.LENGTH_LONG).show();
+        showMessage(tileService, R.string.sys_permission_required_msg);
 
         doRequestPermission(tileService);
+    }
+
+    private static void showMessage(Context context, int msgResId) {
+        // SnackBar would be more prominent, plus it can stay until the uer dismisses it.
+        // SnackBar, however, is tied to an Activity, of which we do not have here.
+        // So we stick with Toast
+        android.widget.Toast toast = android.widget.Toast.makeText(context.getApplicationContext(), msgResId,
+                android.widget.Toast.LENGTH_LONG);
+        // Show toast at center to make it more prominent to the user
+        toast.setGravity(android.view.Gravity.CENTER, 0, 0);
+        toast.show();
     }
 
     // Analogous to ActivityCompat.requestPermissions(Activity ...)
