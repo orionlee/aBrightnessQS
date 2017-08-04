@@ -26,7 +26,7 @@
 - [ ] Misc. UI Polish
   - [ ] settings error reporting (for invalid level string)
   - [x] show current percentage at MainActivity UI
-- [ ] UI to request WRITE_SETTINGS permission
+- [x] UI to request WRITE_SETTINGS permission
 - [ ] Misc. code cleanup refactoring changes
   - [x] review context usage for memory leak (no-op)
 - [x] Experiment to try to increase snappiness of brightness change upon click
