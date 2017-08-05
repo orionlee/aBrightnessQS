@@ -6,6 +6,8 @@ import android.net.Uri;
 import android.provider.Settings;
 import android.service.quicksettings.TileService;
 import android.support.design.widget.Snackbar;
+import android.view.View;
+import android.widget.TextView;
 
 /**
  * Helper to manage System Settings Permission UI, in the context of TileService.
@@ -34,13 +36,24 @@ public class SystemSettingsPermissionUIUtil {
 
     private static void showMessage(Context context, int msgResId) {
         // Snackbar problems:
-        // 1. (FATAL) message got truncated: Snackbar design
-        //    probably enforces some height restriction/
-        // 2. shown at the bottom (per Snackbar design). It can be hacked by modifying the
+        // 1. shown at the bottom (per Snackbar design). It can be hacked by modifying the
         //    custom layout created in SnackbarWrapper
-        // 3. The bar flickers for some unknown reason
+        // 2. The bar flickers for some unknown reason
         SnackbarWrapper snackbarWrapper = SnackbarWrapper.make(context.getApplicationContext(),
-                context.getString(msgResId), Snackbar.LENGTH_INDEFINITE);
+                context.getString(msgResId), Snackbar.LENGTH_INDEFINITE, new SnackbarWrapper.Customizer() {
+                    @Override
+                    public void customize(Snackbar snackbar) {
+                        View snackbarView = snackbar.getView();
+                        TextView snackTextView = (TextView) snackbarView
+                                .findViewById(android.support.design.R.id.snackbar_text);
+                        // To avoid truncating the long text
+                        snackTextView.setMaxLines(5);
+                    }
+                });
+        snackbarWrapper.setAction(context.getString(R.string.ok_btn_label), new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {} // no real action needed.
+        });
         snackbarWrapper.show();
     }
 

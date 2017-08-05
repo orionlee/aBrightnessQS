@@ -24,6 +24,9 @@ import android.widget.FrameLayout;
 public class SnackbarWrapper {
     private final CharSequence text;
     private final int duration;
+    @Nullable
+    private final Customizer customizer;
+
     private final WindowManager windowManager;
     private final Context appplicationContext;
     @Nullable
@@ -31,18 +34,32 @@ public class SnackbarWrapper {
     @Nullable
     private Action action;
 
+    /**
+     * Allows caller to fine tune the generated Snackar.
+     */
+    public static interface Customizer {
+        void customize(Snackbar snackbar);
+    }
+
     @NonNull
     public static SnackbarWrapper make(@NonNull Context applicationContext, @NonNull CharSequence text, @Snackbar.Duration int duration)
     {
-        return new SnackbarWrapper(applicationContext, text, duration);
+        return new SnackbarWrapper(applicationContext, text, duration, null);
     }
 
-    private SnackbarWrapper(@NonNull final Context appplicationContext, @NonNull CharSequence text, @Snackbar.Duration int duration)
+    @NonNull
+    public static SnackbarWrapper make(@NonNull Context applicationContext, @NonNull CharSequence text, @Snackbar.Duration int duration, @NonNull Customizer customizer)
+    {
+        return new SnackbarWrapper(applicationContext, text, duration, customizer);
+    }
+
+    private SnackbarWrapper(@NonNull final Context appplicationContext, @NonNull CharSequence text, @Snackbar.Duration int duration, @Nullable Customizer customizer)
     {
         this.appplicationContext = appplicationContext;
         this.windowManager = (WindowManager) appplicationContext.getSystemService(Context.WINDOW_SERVICE);
         this.text = text;
         this.duration = duration;
+        this.customizer = customizer;
     }
 
     public void show()
@@ -109,6 +126,11 @@ public class SnackbarWrapper {
         {
             snackbar.setAction(action.text, action.listener);
         }
+
+        if (customizer != null) {
+            customizer.customize(snackbar);
+        }
+
         snackbar.show();
     }
 
