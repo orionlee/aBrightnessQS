@@ -17,5 +17,5 @@
     <string name="ok_btn_label">OK</string>
     <string name="cancel_btn_label">CANCEL</string>
 
-    <string name="sys_permission_required_msg">Changing brightness requires permission to modify system settings. Please allow the permission.</string>
+    <string name="sys_permission_required_msg">Changing brightness requires permission to modify system settings.\n\nPlease allow the permission.</string>
 </resources>
