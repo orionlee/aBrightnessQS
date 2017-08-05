@@ -54,8 +54,5 @@
 
     <style name="FOL_Theme_SnackbarWrapper" parent="@style/Theme.AppCompat">
         <item name="colorAccent">@color/colorPrimaryLight</item> <!-- action text -->
-        <!-- somehow android:colorBackground has no effect -->
-        <!-- Note: the background somehow does not cover the left / right edges, which are black -->
-        <item name="android:background">@color/colorSnackbarBackground</item>
     </style>
 </resources>
