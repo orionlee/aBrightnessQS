@@ -20,23 +20,10 @@ import android.service.quicksettings.TileService;
  */
 public class BrightnessTileUpdateService extends Service {
 
-    //
-    // Plumbing for local service
-    //
-
-    public class LocalBinder extends Binder {
-        BrightnessTileUpdateService getService() {
-            return BrightnessTileUpdateService.this;
-        }
-    }
-    
-    // The object that receives interactions from local clients. 
-    private final IBinder mBinder = new LocalBinder();
-
     @Override
     public IBinder onBind(Intent intent) {
-        // TODO: maybe throw UnsupportedException instead as it is not intended to be a Bound service?
-        return mBinder;
+        // Not a bound service
+        return null;
     }
 
 
@@ -95,13 +82,13 @@ public class BrightnessTileUpdateService extends Service {
      */
     public static ComponentName start(Context ctx) {
         ComponentName res = ctx.startService(new Intent(ctx.getApplicationContext(), BrightnessTileUpdateService.class));
-        PLog.v("BrightnessTileUpdateService.start(): " + res);
+        PLog.v("BrightnessTileUpdateService.start(): %s", res);
         return res;
     }
 
     public static boolean stop(Context ctx) {
         boolean res = ctx.stopService(new Intent(ctx.getApplicationContext(), BrightnessTileUpdateService.class));
-        PLog.v("BrightnessTileUpdateService.stop(): " + res);
+        PLog.v("BrightnessTileUpdateService.stop(): %s", res);
         return res;
     }
 

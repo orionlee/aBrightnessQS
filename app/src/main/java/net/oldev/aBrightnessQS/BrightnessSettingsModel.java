@@ -65,8 +65,7 @@ class BrightnessSettingsModel {
                 "Each level between 1 and 100 (or 999 for auto). Invalid one in question: " + lvlStr, e);
             }            
         }
-        // TODO: decide what to do if levels given are not sorted.
-        // for now, I sort the result automatically, rather than throwing exception
+        // Ensure the levels are sorted, ascending.
         Arrays.sort(res);
 
         return res;
@@ -76,14 +75,33 @@ class BrightnessSettingsModel {
         throws IllegalArgumentException {
         settingsStrToArray(settingsStr);
     }
+
+    private static String  normalizeSettingsStr(String settingsStr) {
+        final int[] settingsAry = settingsStrToArray(settingsStr);
+        // Join the int[] to a comma-spearated string.
+        // neither android TextUtils nor java8 String.join work on int[]
+        final StringBuffer sb = new StringBuffer();
+        sb.append(settingsAry[0]);
+        for(int i = 1; i < settingsAry.length; i++) {
+            sb.append(',');
+            sb.append(settingsAry[i]);
+        }
+        return sb.toString();
+    }
+
     public void setSettings(String settings) throws IllegalArgumentException {
         validateSettingsStr(settings);
 
+        // normalize the string stored, mainly ensuring they are levels are sorted (ascending).
+        // (Spaces will be removed too, but they do not matter either way.)
+        // The normalized one will be shown to user right away, to reduce any user surprise.
+        final String settingsNormalized = normalizeSettingsStr(settings);
+
         SharedPreferences.Editor editor = getPrefs().edit();
-        editor.putString(PREFS_BRIGHTNESS_LEVELS, settings);
+        editor.putString(PREFS_BRIGHTNESS_LEVELS, settingsNormalized);
         final boolean success = editor.commit();
         if (success) {
-            fireChangeEvent(settings);
+            fireChangeEvent(settingsNormalized);
         } else {
             throw new RuntimeException("Unexpected failure in committing brightness settings.");
         }        

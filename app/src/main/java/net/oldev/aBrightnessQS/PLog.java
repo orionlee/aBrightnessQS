@@ -7,26 +7,36 @@ import android.util.Log;
  */
 public class PLog {
     private PLog() {} // only has static methods
-
+    private static final String TAG = "BrightnessTile";
+    
     public static void w(String msg, Throwable t) {
-        Log.w("BTS", msg, t);
+        Log.w(TAG, msg, t);
     }
 
     public static void w(String msg) {
-        Log.w("BTS", msg);
+        Log.w(TAG, msg);
     }
     
-    // TODO: add helpers that have parametrized string so that message
-    // need not be built.
-    
-    // TODO: check BuildConfig to avoid debug (or even verbose) if it is not DEBUG
+
     public static void d(String msg) {
-        Log.d("BTS", msg);
+        Log.d(TAG, msg);
     }
 
-    // Intended to be used sparringly
-    public static void v(String msg) {
-        Log.v("BTS", msg);
+    public static void d(String msgFormat, Object... args) {
+        final String msg= String.format(msgFormat, args);
+        d(msg);
     }
-    
+
+    // Intended to be used sparingly
+    public static void v(String msg) {
+        if (BuildConfig.DEBUG) { // only used for development
+            Log.v(TAG, msg);
+        }
+    }
+
+    public static void v(String msgFormat, Object... args) {
+        final String msg= String.format(msgFormat, args);
+        v(msg);
+    }
+
 }

@@ -37,7 +37,7 @@ public class BrightnessManager {
             pct = mConverter.sysBrightnessToUiPct(brightness);
         }
         // for debugging brightness - UI slider percentage
-        PLog.v("BrightnessManager.getPct():  brightness=" + brightness + " ; pct=" + pct);
+        PLog.v("BrightnessManager.getPct():  brightness=%s ; pct=%s", brightness, pct);
         
         return pct;
     }
@@ -62,12 +62,12 @@ public class BrightnessManager {
                 brightness = 1;
             }
             setManual(brightness);
-            PLog.v("BrightnessManager.setPct(): pct=" + pct + " ; brightness=" + brightness);
+            PLog.v("BrightnessManager.setPct(): pct=%s ; brightness=%s", pct, brightness);
         }
     }
     
     private void setManual(int brightnessVal) {
-        // TODO: assert 0 <= brightnessVal <= 255
+        assert 0 <= brightnessVal && brightnessVal <= 255; // should have been guaranteed by (internal) callers.
         Settings.System.putInt(mContext.getContentResolver(),
         Settings.System.SCREEN_BRIGHTNESS, brightnessVal);
         Settings.System.putInt(mContext.getContentResolver(),

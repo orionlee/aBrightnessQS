@@ -141,10 +141,7 @@ public class BrightnessTileService
                 PLog.v("TileUpdater: no change in brightness. No Update.");
                 return;
             }
-            PLog.d("TileUpdater: Brightness% change detected - prev: " + msPrevBrightnessPct + " , current: " + brightnessPct);
-
-            // TODO: consider to supply an user option of not updating tile
-            // if the intermittent stalling (with multiple clicks) cannot be fixed
+            PLog.d("TileUpdater: Brightness Pct change detected - prev: %s , current: %s", msPrevBrightnessPct, brightnessPct);
 
             Tile tile = parent.getQsTile();
 

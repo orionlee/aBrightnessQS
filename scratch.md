@@ -7,7 +7,7 @@
 
 ## gradleLB.sh (a private helper that logs output in a file and beep upon success/error)
 gradleLB.sh :app:installDebug
-adb logcat -s BTS:V
+adb logcat -s BrightnessTile:V
 
 agradleLB.sh :app:testDebugUnitTest
 gradleLB.sh :app:compileDebugSources

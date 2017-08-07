@@ -132,13 +132,7 @@ public class MainActivity extends AppCompatActivity {
         
         builder.setPositiveButton(R.string.ok_btn_label, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                String newVal = editText.getText().toString();
-                try {
-                    mModel.setSettings(newVal);
-                } catch (IllegalArgumentException iae) {
-                    // TODO: proper error message display
-                    dbgMsg(iae.getMessage());
-                }
+            updateModelSettingsWithEditText(editText);
             }
         });
         
@@ -156,14 +150,7 @@ public class MainActivity extends AppCompatActivity {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 boolean handled = false;
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    // TODO: Refactor with setPositiveButton
-                    String newVal = editText.getText().toString();
-                    try {
-                        mModel.setSettings(newVal);
-                    } catch (IllegalArgumentException iae) {
-                        // TODO: proper error message display
-                        dbgMsg(iae.getMessage());
-                    }
+                    updateModelSettingsWithEditText(editText);
                     dialog.dismiss();
                     handled = true;
                 }
@@ -171,7 +158,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        /// TODO: return dialog;
+    }
+
+    private void updateModelSettingsWithEditText(final EditText editText) {
+        String newVal = editText.getText().toString();
+        try {
+            mModel.setSettings(newVal);
+        } catch (IllegalArgumentException iae) {
+            // TODO: proper error message display
+            dbgMsg(iae.getMessage());
+        }
     }
 }
 
