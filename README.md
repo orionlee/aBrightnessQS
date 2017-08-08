@@ -27,7 +27,7 @@
   - [x] settings error reporting (for invalid level string)
   - [x] show current percentage at MainActivity UI
 - [x] UI to request WRITE_SETTINGS permission
-- [ ] Misc. code cleanup refactoring changes
+- [x] Misc. code cleanup refactoring changes
   - [x] review context usage for memory leak (no-op)
 - [x] Experiment to try to increase snappiness of brightness change upon click
   - v0.1.9: base (try to update icon if applicable)
