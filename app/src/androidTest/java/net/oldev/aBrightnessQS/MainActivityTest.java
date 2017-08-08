@@ -26,6 +26,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 
 /**
  * A sanity check test for Main UI
@@ -73,6 +74,33 @@ public class MainActivityTest {
         onView(withId(R.id.brightnessPctsOutput))
                 .check(matches(withText(msNewLevelsStr)));
 
+    }
+
+    @Test
+    public void t3ModifySettingsNegative() {
+        // Click to get dialog to update brightness levels
+        ViewInteraction brightnessPctsLayout = onView(
+                allOf(withId(R.id.brightnessPctsSection), isDisplayed()));
+        brightnessPctsLayout.perform(click());
+
+        // randomize levels to be entered so that the new one is unlikely to be the same as the existing one.
+        final int startLevel = (int)(System.currentTimeMillis() % 50) + 1;
+        String negNewLevelsStr = "1,19,101"; // so that it is not a valid string
+
+        replaceTextInDialog(R.id.brightnessPctsInput, R.string.ok_btn_label, negNewLevelsStr);
+
+        // Assert that alert dialog is still displayed (with the invalid settings in question)
+        onView(withId(R.id.brightnessPctsInput))
+                .check(matches(withText(negNewLevelsStr)));
+
+    }
+
+    @Test
+    public void t4NegSettingsNotPersisted() {
+        // Re-assert the existing levels remain there. The invalid settings have not been persisted.
+        // upon activity relaunch.
+        onView(withId(R.id.brightnessPctsOutput))
+                .check(matches(withText(msNewLevelsStr)));
     }
 
     /**

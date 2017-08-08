@@ -3,7 +3,7 @@
 - add a brightness toggle tile to quick settings
 - useful when the quick settings is in compact mode (without the brightness sliders)
 
-## TODOS
+## TODOs
 - [x] toggle through brightness steps basics: 
   - [x] use predefined / hardcoded steps
   - [x] UI to configure the steps
@@ -17,14 +17,14 @@
   - [x] change Tile service to Active Tile
   - [x] barebone service 
   - [x] auto start on boot
-  - [x] start service upon re-instllation as well.
+  - [x] start service upon re-installation as well.
 - [x] Use a linear Percentage Converter for now (Motorola devices)
   - [x] show percentage on tile UI
 - [ ] Different devices have differing brightness slider implementation. Consider adapt percentage to differing devices. E.g., 
-     - a slider as perceived brightness, which has a non-linear relationship with  underlying system brigntess value, found in ASUS tables
-     - a sldier that has a simple linear relationship to underlying system brightness, found in Motorola phones.
-- [ ] Misc. UI Polish
-  - [ ] settings error reporting (for invalid level string)
+     - a slider as perceived brightness, which has a non-linear relationship with  underlying system brightness value, found in ASUS tables
+     - a slider that has a simple linear relationship to underlying system brightness, found in Motorola phones.
+- [x] Misc. UI Polish
+  - [x] settings error reporting (for invalid level string)
   - [x] show current percentage at MainActivity UI
 - [x] UI to request WRITE_SETTINGS permission
 - [ ] Misc. code cleanup refactoring changes
@@ -37,13 +37,13 @@
   - v0.1.14 : update icon with AsyncTask (that only update UI)
   - v0.1.15 : an empty tile (still calling `tile.updateTile()`)
   - Conclusion: 
-    - *any* tileupdate, even an empty one, could stall UI intermittently
-    - using AsyncTask brings no noticable change
+    - *any* tile update, even an empty one, could stall UI intermittently
+    - using AsyncTask brings no noticeable change
     - Reasons
       - by stalling, it means that after clicking the tile, occasionally
         it does not accept further clicks for a few seconds, making cycling
         through brightness a tad unpleasant.
-      - the reason seems to be when tere is a tile update, Android would occasionally
+      - the reason seems to be when there is a tile update, Android would occasionally
         stop listening to tile (calling `#onStopListening()`). A few seconds later,
         it would start listening again (calling `#onStartListening()`). 
       - In the interval between stop and start, clicking on tile would be fruitless

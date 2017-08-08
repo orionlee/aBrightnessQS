@@ -110,7 +110,12 @@ public class MainActivity extends AppCompatActivity {
         final TextView tView = (TextView)findViewById(id);
         return tView.getText();
     }
+
     private void showBrightnessPctsDialog(CharSequence curValue) {
+        showBrightnessPctsDialog(curValue, null);
+    }
+
+    private void showBrightnessPctsDialog(CharSequence curValue, CharSequence errMsg) {
         //@see https://stackoverflow.com/questions/10903754/input-text-dialog-android
 
         android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
@@ -125,11 +130,15 @@ public class MainActivity extends AppCompatActivity {
         editText.setImeOptions(EditorInfo.IME_ACTION_DONE);
         editText.setId(R.id.brightnessPctsInput); // for androidTest
 
-
         builder.setView(editText);
 
         editText.setText(curValue);
-        
+        final TextView errMsgText = new TextView(this);
+        if (errMsg != null && errMsg.length() > 0) {
+            editText.setError(errMsg);
+        }
+
+        // TODO: style (the color) buttons
         builder.setPositiveButton(R.string.ok_btn_label, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
             updateModelSettingsWithEditText(editText);
@@ -165,8 +174,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             mModel.setSettings(newVal);
         } catch (IllegalArgumentException iae) {
-            // TODO: proper error message display
-            dbgMsg(iae.getMessage());
+            showBrightnessPctsDialog(newVal, iae.getMessage());
         }
     }
 }
