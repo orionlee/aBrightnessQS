@@ -118,7 +118,8 @@ public class MainActivity extends AppCompatActivity {
     private void showBrightnessPctsDialog(CharSequence curValue, CharSequence errMsg) {
         //@see https://stackoverflow.com/questions/10903754/input-text-dialog-android
 
-        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
+        android.support.v7.app.AlertDialog.Builder builder =
+                new android.support.v7.app.AlertDialog.Builder(this, R.style.AppTheme_Dialog_Alert);
 
         builder.setTitle(getTextOfViewById(R.id.brightnessPctsLabel));
         builder.setMessage(getTextOfViewById(R.id.brightnessPctsLabelDesc));
@@ -129,6 +130,7 @@ public class MainActivity extends AppCompatActivity {
         //@see https://stackoverflow.com/a/5941620
         editText.setImeOptions(EditorInfo.IME_ACTION_DONE);
         editText.setId(R.id.brightnessPctsInput); // for androidTest
+        // TODO: style EditText to be consistent with the colors of the app
 
         builder.setView(editText);
 
@@ -138,7 +140,6 @@ public class MainActivity extends AppCompatActivity {
             editText.setError(errMsg);
         }
 
-        // TODO: style (the color) buttons
         builder.setPositiveButton(R.string.ok_btn_label, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
             updateModelSettingsWithEditText(editText);

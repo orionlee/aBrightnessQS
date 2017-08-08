@@ -114,8 +114,8 @@ public class MainActivityTest {
         ViewInteraction editText = onView(
                 allOf(withId(dialogEditTextId),
                         // withParent(...) check obtained from espresso recorder
-                        withParent(allOf(withId(android.R.id.custom),
-                                withParent(withClassName(is("android.widget.FrameLayout"))))),
+                        withParent(allOf(withId(R.id.custom),
+                                withParent(withId(R.id.customPanel)))),
                         isDisplayed()));
         editText.perform(click(),
                 replaceText(newText),
