@@ -1,16 +1,15 @@
 package net.oldev.aBrightnessQS;
 
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.content.DialogInterface;
+import android.os.Bundle;
 import android.os.Handler;
-import android.view.View;
-import android.widget.TextView;
-import android.widget.EditText;
-
+import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
-import android.view.inputmethod.EditorInfo;
 import android.view.KeyEvent;
+import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -62,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         brightnessPctsSection.setOnClickListener(new View.OnClickListener() {
              public void onClick(View v) {
                  final CharSequence brightnessPctsStr = brightnessPctsOutput.getText();
-                 showBrightnessPctsDialog(brightnessPctsStr);
+                 new BrightnessPctsDialogBuilder().show(brightnessPctsStr);
              }
          });
 
@@ -106,76 +105,79 @@ public class MainActivity extends AppCompatActivity {
         // Activity no longer visible: no need to listen to brightness change anymore.
         mBrightnessManager.unregisterOnChange(mBrightnessContentObserver); 
     }
-    private CharSequence getTextOfViewById(int id) {
-        final TextView tView = (TextView)findViewById(id);
-        return tView.getText();
-    }
 
-    private void showBrightnessPctsDialog(CharSequence curValue) {
-        showBrightnessPctsDialog(curValue, null);
-    }
-
-    private void showBrightnessPctsDialog(CharSequence curValue, CharSequence errMsg) {
-        //@see https://stackoverflow.com/questions/10903754/input-text-dialog-android
-
-        android.support.v7.app.AlertDialog.Builder builder =
-                new android.support.v7.app.AlertDialog.Builder(this, R.style.AppTheme_Dialog_Alert);
-
-        builder.setTitle(getTextOfViewById(R.id.brightnessPctsLabel));
-        builder.setMessage(getTextOfViewById(R.id.brightnessPctsLabelDesc));
-
-        final EditText editText = new EditText(this);
-        editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
-        //@see https://developer.android.com/training/keyboard-input/style.html#Action
-        //@see https://stackoverflow.com/a/5941620
-        editText.setImeOptions(EditorInfo.IME_ACTION_DONE);
-        editText.setId(R.id.brightnessPctsInput); // for androidTest
-        // TODO: style EditText to be consistent with the colors of the app
-
-        builder.setView(editText);
-
-        editText.setText(curValue);
-        final TextView errMsgText = new TextView(this);
-        if (errMsg != null && errMsg.length() > 0) {
-            editText.setError(errMsg);
+    // Encapsulates the logic of the dialog UI and actions
+    // It is primarily stateless, except it needs parent's mModel and Context
+    private class BrightnessPctsDialogBuilder {
+        public void show(CharSequence curValue) {
+            show(curValue, null);
         }
 
-        builder.setPositiveButton(R.string.ok_btn_label, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-            updateModelSettingsWithEditText(editText);
-            }
-        });
-        
-        builder.setNegativeButton(R.string.cancel_btn_label, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                // Nothing to do
-            }
-        });
+        public void show(CharSequence curValue, CharSequence errMsg) {
+            //@see https://stackoverflow.com/questions/10903754/input-text-dialog-android
 
-        final android.app.Dialog dialog = builder.show();
+            android.support.v7.app.AlertDialog.Builder builder =
+                    new android.support.v7.app.AlertDialog.Builder(MainActivity.this, R.style.AppTheme_Dialog_Alert);
 
-        // set it here as it requires a reference to dialog
-        editText.setOnEditorActionListener(new android.widget.TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                boolean handled = false;
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
+            builder.setTitle(getTextOfViewById(R.id.brightnessPctsLabel));
+            builder.setMessage(getTextOfViewById(R.id.brightnessPctsLabelDesc));
+
+            final EditText editText = new EditText(MainActivity.this);
+            editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+            //@see https://developer.android.com/training/keyboard-input/style.html#Action
+            //@see https://stackoverflow.com/a/5941620
+            editText.setImeOptions(EditorInfo.IME_ACTION_DONE);
+            editText.setId(R.id.brightnessPctsInput); // for androidTest
+            // TODO: style EditText to be consistent with the colors of the app
+
+            builder.setView(editText);
+
+            editText.setText(curValue);
+            if (errMsg != null && errMsg.length() > 0) {
+                editText.setError(errMsg);
+            }
+
+            builder.setPositiveButton(R.string.ok_btn_label, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
                     updateModelSettingsWithEditText(editText);
-                    dialog.dismiss();
-                    handled = true;
                 }
-                return handled;
+            });
+
+            builder.setNegativeButton(R.string.cancel_btn_label, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    // Nothing to do
+                }
+            });
+
+            final android.app.Dialog dialog = builder.show();
+
+            // set it here as it requires a reference to dialog
+            editText.setOnEditorActionListener(new android.widget.TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    boolean handled = false;
+                    if (actionId == EditorInfo.IME_ACTION_DONE) {
+                        updateModelSettingsWithEditText(editText);
+                        dialog.dismiss();
+                        handled = true;
+                    }
+                    return handled;
+                }
+            });
+
+        }
+        private void updateModelSettingsWithEditText(final EditText editText) {
+            String newVal = editText.getText().toString();
+            try {
+                MainActivity.this.mModel.setSettings(newVal);
+            } catch (IllegalArgumentException iae) {
+                show(newVal, iae.getMessage());
             }
-        });
+        }
 
-    }
-
-    private void updateModelSettingsWithEditText(final EditText editText) {
-        String newVal = editText.getText().toString();
-        try {
-            mModel.setSettings(newVal);
-        } catch (IllegalArgumentException iae) {
-            showBrightnessPctsDialog(newVal, iae.getMessage());
+        private CharSequence getTextOfViewById(int id) {
+            final TextView tView = (TextView)MainActivity.this.findViewById(id);
+            return tView.getText();
         }
     }
 }
