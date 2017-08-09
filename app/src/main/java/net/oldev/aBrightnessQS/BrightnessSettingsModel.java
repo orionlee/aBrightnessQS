@@ -21,9 +21,32 @@ class BrightnessSettingsModel {
     private ChangeListener mListener = null;
     
     public static final int BRIGHTNESS_AUTO = 999;
+    
     public static interface ChangeListener {
         void onChange(String newSettings);
     }
+    
+    public static class IllegalSettingsException extends IllegalArgumentException {
+        private final String mInvalidLevel;
+
+        public IllegalSettingsException(String invalidLevel) {
+            super(constructErrMsg(invalidLevel));
+            mInvalidLevel = invalidLevel;
+        }
+
+        public IllegalSettingsException(String invalidLevel, Throwable t) {
+            super(constructErrMsg(invalidLevel), t);
+            mInvalidLevel = invalidLevel;
+        }
+
+        private static String constructErrMsg(String invalidLevel) {
+            return "Invalid level: " + invalidLevel;
+        }
+
+        public String getInvalidLevel() { return mInvalidLevel; }
+    }
+    
+    
     public BrightnessSettingsModel(Context context) {
         mContext = context;
     }
@@ -43,11 +66,12 @@ class BrightnessSettingsModel {
     public int[] getSettingsAsArray() {
         return settingsStrToArray(getSettings());
     }
+    
     static int[] settingsStrToArray(String settingsStr)
-        throws IllegalArgumentException {
+        throws IllegalSettingsException {
 
         if (settingsStr == null || settingsStr.isEmpty()) {
-            throw new IllegalArgumentException("Brightness Level Settings must not be empty");
+            throw new IllegalSettingsException("");
         }
         String[] lvlStrs = settingsStr.split(",");
         int[] res = new int[lvlStrs.length];
@@ -58,11 +82,12 @@ class BrightnessSettingsModel {
                 if ( (lvl >= 1 && lvl <= 100) || lvl == BRIGHTNESS_AUTO ) {
                     res[i] = lvl;
                 } else {
-                    throw new IllegalArgumentException("Invalid level " + lvl);
+                    throw new IllegalSettingsException(Integer.toString(lvl));
                 }
+            } catch (IllegalSettingsException ise) {
+                throw ise;
             } catch (Exception e) {
-                throw new IllegalArgumentException("Brightness Levels Settings must be comma-separated. " + 
-                "Each level between 1 and 100 (or 999 for auto). Invalid one in question: " + lvlStr, e);
+                throw new IllegalSettingsException(lvlStr, e);
             }            
         }
         // Ensure the levels are sorted, ascending.
@@ -72,7 +97,7 @@ class BrightnessSettingsModel {
     }
 
     private static void validateSettingsStr(String settingsStr) 
-        throws IllegalArgumentException {
+        throws IllegalSettingsException {
         settingsStrToArray(settingsStr);
     }
 
@@ -89,7 +114,7 @@ class BrightnessSettingsModel {
         return sb.toString();
     }
 
-    public void setSettings(String settings) throws IllegalArgumentException {
+    public void setSettings(String settings) throws IllegalSettingsException {
         validateSettingsStr(settings);
 
         // normalize the string stored, mainly ensuring they are levels are sorted (ascending).

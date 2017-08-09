@@ -170,8 +170,9 @@ public class MainActivity extends AppCompatActivity {
             String newVal = editText.getText().toString();
             try {
                 MainActivity.this.mModel.setSettings(newVal);
-            } catch (IllegalArgumentException iae) {
-                show(newVal, iae.getMessage());
+            } catch (BrightnessSettingsModel.IllegalSettingsException ise) {
+                String errMsg = MainActivity.this.getString(R.string.err_msgf_invalid_settings, ise.getInvalidLevel());
+                show(newVal, errMsg);
             }
         }
 

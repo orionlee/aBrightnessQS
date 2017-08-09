@@ -17,5 +17,7 @@
     <string name="ok_btn_label">OK</string>
     <string name="cancel_btn_label">CANCEL</string>
 
+    <string name="err_msgf_invalid_settings">Brightness Levels Settings must be comma-separated, with each level between 1 and 100 (or 999 for auto). Invalid one in question: %s</string>
+
     <string name="sys_permission_required_msg">Changing brightness requires permission to modify system settings.\n\nPlease allow the permission.</string>
 </resources>
