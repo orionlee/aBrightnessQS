@@ -2,6 +2,7 @@
 
 buildscript {
     repositories {
+        google() // required for android gradle 3.0.1
         jcenter()
     }
     dependencies {
