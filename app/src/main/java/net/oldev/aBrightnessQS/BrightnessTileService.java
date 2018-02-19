@@ -117,20 +117,28 @@ public class BrightnessTileService
         }
 
         // Convert brightness percentage to 
-        // an icon similar to what user preceives with standard brightness slider bar
+        // an icon similar to what user perceives with standard brightness slider bar
         // With standard brightness slider bar, 
         // - 1-quarter is about 5%
         // - roughly  half-way is about 25%,
         // - 3-quarter is about 50%)
         private int brightnessPctToIconRsrcId(int brightnessPct) {
-            if (brightnessPct > 85) {
+            if (brightnessPct > 94) {
                 return R.drawable.tile_brightness_black_100_24dp;
-            } else if (brightnessPct > 65) {
-                return R.drawable.tile_brightness_black_75_24dp;                
-            } else if (brightnessPct > 40) {
-                return R.drawable.tile_brightness_black_50_24dp;                
-            } else if (brightnessPct > 24) {
-                return R.drawable.tile_brightness_black_25_24dp;                
+            } else if (brightnessPct > 81) {
+                return R.drawable.tile_brightness_black_87_24dp;
+            } else if (brightnessPct > 69) {
+                return R.drawable.tile_brightness_black_75_24dp;
+            } else if (brightnessPct > 57) {
+                return R.drawable.tile_brightness_black_63_24dp;
+            } else if (brightnessPct > 44) {
+                return R.drawable.tile_brightness_black_50_24dp;
+            } else if (brightnessPct > 31) {
+                return R.drawable.tile_brightness_black_37_24dp;
+            } else if (brightnessPct > 19) {
+                return R.drawable.tile_brightness_black_25_24dp;
+            } else if (brightnessPct > 6) {
+                return R.drawable.tile_brightness_black_13_24dp;
             } else {
                 return R.drawable.tile_brightness_black_0_24dp;                                
             }
